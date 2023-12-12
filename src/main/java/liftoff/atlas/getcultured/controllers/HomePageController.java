@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HomePageController {
 
     @GetMapping(value="")
-    @ResponseBody
     public String renderHomePage () {
 
         return "index";
