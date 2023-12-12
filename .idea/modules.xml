@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/altas.iml" filepath="$PROJECT_DIR$/.idea/altas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/get-cultured.iml" filepath="$PROJECT_DIR$/.idea/modules/get-cultured.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/get-cultured.main.iml" filepath="$PROJECT_DIR$/.idea/modules/get-cultured.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/get-cultured.test.iml" filepath="$PROJECT_DIR$/.idea/modules/get-cultured.test.iml" />
     </modules>
   </component>
 </project>
