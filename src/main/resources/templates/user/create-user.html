@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>New User Sign-Up - Create User</title>
+    </head>
+    <body>
+        <h1>User Creation Form</h1>
+        <form method="post">
+            <div class="form-group">
+                <label for="email">Desired Username: </label>
+                <input id="username" name="username" />
+                <!--        <span th:errors="${user.username}" class="error"></span>-->
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address: </label>
+                <input id="email" name="email" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Set Password: </label>
+                <input id="password" name="password" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Verify Password: </label>
+                <input id="verify-password" name="verify-password" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create Account" />
+            </div>
+        </form>
+        <p>Have an account already? <a href="./login">Log-In Instead!</a></p>
+    </body>
+</html>
