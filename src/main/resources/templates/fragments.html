@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head th:fragment="head">
+
+    <!-- Bootstrap stylesheets and script -->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/techjobs.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+
+    <title th:text="'TechJobs' + ${title == null ? '' : ' :: ' + title}">TechJobs</title>
 </head>
+
 <body>
+
+<nav th:fragment="user-nav" class="navbar">
+            <a th:href="@{/}">GetCultured</a> ::: Test User Nav:
+            <a th:href="@{/user/login}">Log In</a> /
+            <a th:href="@{/user/sign-up}">Sign-Up</a> ::>
+            <a th:href="@{/user/profile}">Edit Profile</a>
+</nav>
 
 </body>
 </html>
