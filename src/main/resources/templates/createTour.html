@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Tour</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Create Tour</h2>
+
+    <!-- Form for creating a new tour with multiple stops -->
+    <form action="/tours/create" method="post" th:object="${tour}" enctype="multipart/form-data">
+        <!-- Tour Name -->
+        <label for="tourName">Tour Name:</label>
+        <input type="text" id="tourName" name="tourName" th:field="*{name}" required>
+
+        <!-- Summary Description -->
+        <label for="summaryDescription">Summary Description:</label>
+        <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required></textarea>
+
+        <!-- Estimated Length -->
+        <label for="estimatedLength">Estimated Length:</label>
+        <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
+
+        <!-- Image Upload -->
+        <label for="image">Tour Image:</label>
+        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
+
+        <!-- Stops Section -->
+        <div id="stopsSection">
+            <!-- Dynamic section for stops -->
+            <div th:each="stop, stopStat : *{stops}">
+                <div class="stop">
+                    <h3>Stop <span th:text="${stopStat.index + 1}"></span></h3>
+
+                    <!-- Stop Name -->
+                    <label th:for="'stops[' + ${stopStat.index} + '].stopName'">Stop Name:</label>
+                    <input type="text" th:id="'stops[' + ${stopStat.index} + '].stopName'" th:name="'stops[' + ${stopStat.index} + '].stopName'" th:field="*{stops[__${stopStat.index}__].stopName}" required>
+
+                    <!-- Stop Description -->
+                    <label th:for="'stops[' + ${stopStat.index} + '].stopDescription'">Stop Description:</label>
+                    <textarea th:id="'stops[' + ${stopStat.index} + '].stopDescription'" th:name="'stops[' + ${stopStat.index} + '].stopDescription'" th:field="*{stops[__${stopStat.index}__].stopDescription}" required></textarea>
+
+                    <!-- Image Upload for Stop -->
+                    <label th:for="'stops[' + ${stopStat.index} + '].image'">Stop Image:</label>
+                    <input type="file" th:id="'stops[' + ${stopStat.index} + '].image'" th:name="'stops[' + ${stopStat.index} + '].image'" accept=".jpg, .jpeg, .png" required>
+
+                    <!-- Image Preview -->
+                    <img id="imagePreview_${stopStat.index}" class="image-preview" alt="Image Preview">
+
+                    <!-- Delete Stop Button -->
+                    <button type="button" class="delete-stop-button" onclick="deleteStop(${stopStat.index})">Delete Stop</button>
+
+
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Stop Button -->
+        <button type="button" class="add-stop-button" onclick="addStop()">Add Stop</button>
+
+        <!-- Other fields... -->
+
+        <!-- Submit Button -->
+        <button type="submit" class="save-button">Save Tour</button>
+    </form>
+
+    <!-- Back to Tour List link -->
+    <p><a href="/tours">Back to Tour List</a></p>
+</div>
+
+<!-- Add your script or additional styling here -->
+
+<script th:inline="javascript">
+    function addStop() {
+        var stopIndex = document.getElementById("stopsSection").childElementCount;
+
+        var newStopHtml = '<div class="stop">' +
+            '<h3>Stop ' + (stopIndex + 1) + '</h3>' +
+            '<label for="stops[' + stopIndex + '].stopName">Stop Name:</label>' +
+            '<input type="text" id="stops[' + stopIndex + '].stopName" name="stops[' + stopIndex + '].stopName" required>' +
+            '<label for="stops[' + stopIndex + '].stopDescription">Stop Description:</label>' +
+            '<textarea id="stops[' + stopIndex + '].stopDescription" name="stops[' + stopIndex + '].stopDescription" required></textarea>' +
+            '<label for="stops[' + stopIndex + '].image">Stop Image:</label>' +
+            '<input type="file" id="stops[' + stopIndex + '].image" name="stops[' + stopIndex + '].image" accept=".jpg, .jpeg, .png" onchange="previewImage(this, \'imagePreview_' + stopIndex + '\')" required>' +
+            '<img id="imagePreview_' + stopIndex + '" class="image-preview" alt="Image Preview">' +
+            '<button type="button" class="delete-stop-button" onclick="deleteStop(' + stopIndex + ')">Delete Stop</button>' +
+            '<hr>' +
+            '</div>';
+
+        document.getElementById("stopsSection").insertAdjacentHTML("beforeend", newStopHtml);
+    }
+
+    function deleteStop(index) {
+        var stopElement = document.getElementById("stopsSection").children[index];
+        stopElement.parentNode.removeChild(stopElement);
+    }
+
+    function previewImage(input, imgId) {
+        var imgElement = document.getElementById(imgId);
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imgElement.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            imgElement.src = "";
+        }
+    }
+</script>
+
+</body>
+</html>

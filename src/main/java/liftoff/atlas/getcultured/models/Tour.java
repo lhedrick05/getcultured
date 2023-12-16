@@ -8,8 +8,6 @@ import java.util.List;
 
 @Entity
 public class Tour extends AbstractEntity {
-
-    private String tourName;
     private String summaryDescription;
     private Double estimatedLength;
     private Double estimatedTravelTime;
@@ -42,14 +40,6 @@ public class Tour extends AbstractEntity {
         this.author = author;
         this.location = location;
         this.city = city;
-    }
-
-    public String getTourName() {
-        return tourName;
-    }
-
-    public void setTourName(String tourName) {
-        this.tourName = tourName;
     }
 
     public String getSummaryDescription() {
