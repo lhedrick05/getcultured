@@ -25,7 +25,7 @@ public class TourController {
     @GetMapping("/create")
     public String showCreateTourForm(Model model) {
         model.addAttribute("tour", new Tour());
-        return "createTour"; // Assuming you have a Thymeleaf template named createTour.html
+        return "createTour";
     }
 
     // Handling the tour creation form submission
@@ -41,7 +41,7 @@ public class TourController {
     public String listTours(Model model) {
         List<Tour> tours = tourService.getAllTours();
         model.addAttribute("tours", tours);
-        return "tourList"; // Assuming you have a Thymeleaf template named tourList.html
+        return "tourList";
     }
 
     // Mapping for viewing a specific tour
@@ -49,7 +49,7 @@ public class TourController {
     public String viewTour(@PathVariable Long tourId, Model model) {
         Tour tour = tourService.getTourById(tourId);
         model.addAttribute("tour", tour);
-        return "viewTour"; // Assuming you have a Thymeleaf template named viewTour.html
+        return "viewTour";
     }
 
     // Mapping for deleting a tour
