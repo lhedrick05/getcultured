@@ -1,20 +1,42 @@
 package liftoff.atlas.getcultured.models;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+@Entity
 public class User {
 
+    @Id
+    @GeneratedValue
     private int userId;
 
+    @NotNull
     private String username;
+
+    @NotNull
+    @Email
     private String emailAddress;
-    private String password;
+
+    @NotNull
     private String passwordHash;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public User() {}
 
     public User(String username, String emailAddress, String password) {
         this.username = username;
         this.emailAddress = emailAddress;
-        this.password = password;
+        this.passwordHash = encoder.encode(password);
+    }
+
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, passwordHash);
     }
 
     public int getUserId() {
@@ -25,31 +47,8 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
 }
