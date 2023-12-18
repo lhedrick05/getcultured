@@ -15,8 +15,6 @@ public class UserImage extends AbstractEntity {
     @Lob
     private byte[] imageData;
 
-    // Constructors, getters, setters, and other methods
-
     public UserImage(User user, byte[] imageData) {
         super();
         this.user = user;

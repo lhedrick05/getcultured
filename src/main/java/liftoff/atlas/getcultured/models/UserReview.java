@@ -21,8 +21,6 @@ public class UserReview extends AbstractEntity {
 
     private int rating;
 
-    // Constructors, getters, setters, and other methods
-
     public UserReview(User user, Tour tour, String reviewText, int rating) {
         super();
         this.user = user;
@@ -30,8 +28,6 @@ public class UserReview extends AbstractEntity {
         this.reviewText = reviewText;
         this.rating = rating;
     }
-
-    // Add getters and setters for other fields
 
     public User getUser() {
         return user;
