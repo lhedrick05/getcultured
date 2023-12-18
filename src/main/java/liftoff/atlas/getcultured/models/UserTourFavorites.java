@@ -15,7 +15,7 @@ public class UserTourFavorites extends AbstractEntity {
     @NotNull(message = "Tour cannot be null")
     private Tour tour;
 
-    public UserTourFavorites(int id, String name, User user, Tour tour) {
+    public UserTourFavorites(User user, Tour tour) {
         super();
         this.user = user;
         this.tour = tour;

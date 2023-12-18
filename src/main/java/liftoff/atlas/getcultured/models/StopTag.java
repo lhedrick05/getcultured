@@ -16,7 +16,7 @@ public class StopTag extends AbstractEntity {
     private Tag tag;
 
 
-    public StopTag(int id, String name, Stop stop, Tag tag) {
+    public StopTag(Stop stop, Tag tag) {
         super();
         this.stop = stop;
         this.tag = tag;

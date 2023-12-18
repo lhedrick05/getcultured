@@ -44,7 +44,7 @@ public class Stop extends AbstractEntity {
     @OneToMany(mappedBy = "stop")
     private List<StopTag> stopTag;
 
-    public Stop(int id, String name, Tour tour, boolean stopStatus, String stopDescription, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, MapMarker mapMarker, int cost, String hoursOfOperation, int stopRating, String category, boolean popularStopDesignation, List<StopTag> stopTags) {
+    public Stop(Tour tour, boolean stopStatus, String stopDescription, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, MapMarker mapMarker, int cost, String hoursOfOperation, int stopRating, String category, boolean popularStopDesignation, List<StopTag> stopTags) {
         super();
         this.tour = tour;
         this.stopStatus = stopStatus;

@@ -11,7 +11,7 @@ public class AdminPermission extends AbstractEntity {
     @ManyToMany(mappedBy = "adminPermissions")
     private Set<UserGroup> userGroups;
 
-    public AdminPermission(int id, String name) {
+    public AdminPermission() {
         super();
     }
 
