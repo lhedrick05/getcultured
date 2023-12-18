@@ -23,7 +23,7 @@ public class UserReview extends AbstractEntity {
 
     // Constructors, getters, setters, and other methods
 
-    public UserReview(int id, String name, User user, Tour tour, String reviewText, int rating) {
+    public UserReview(User user, Tour tour, String reviewText, int rating) {
         super();
         this.user = user;
         this.tour = tour;

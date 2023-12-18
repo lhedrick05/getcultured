@@ -13,8 +13,6 @@ public class TourService {
 
     private final TourRepository tourRepository;
 
-    private Tour tour = new Tour();
-
     @Autowired
     public TourService(TourRepository tourRepository) {
         this.tourRepository = tourRepository;
@@ -26,8 +24,8 @@ public class TourService {
     }
 
     // Get a tour by ID
-    public Tour getTourById(Long tourId) {
-        return tourRepository.findById(tour.getId()).orElse(null);
+    public Tour getTourById(int tourId) {
+        return tourRepository.findById(tourId).orElse(null);
     }
 
     // Save or update a tour, including handling file upload
@@ -48,11 +46,10 @@ public class TourService {
     }
 
     // Delete a tour by ID
-    public void deleteTour(Long tourId) {
-        tourRepository.deleteById(tour.getId());
+    public void deleteTour(int tourId) {
+        tourRepository.deleteById(tourId);
     }
 
     // Other methods...
 
 }
-

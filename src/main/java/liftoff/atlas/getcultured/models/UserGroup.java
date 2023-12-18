@@ -16,10 +16,6 @@ public class UserGroup extends AbstractEntity {
     private Set<AdminPermission> adminPermissions;
 
     public UserGroup() {
-
-    }
-
-    public UserGroup(int id, String name) {
         super();
     }
 

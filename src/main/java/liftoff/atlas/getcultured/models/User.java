@@ -43,7 +43,7 @@ public class User extends AbstractEntity{
 
     }
 
-    public User(int id, String name, String userEmail, String userFirstName, String userLastName, String location) {
+    public User(String userEmail, String userFirstName, String userLastName, String location) {
         super();
         this.userEmail = userEmail;
         this.userFirstName = userFirstName;

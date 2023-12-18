@@ -20,7 +20,7 @@ public class Tag extends AbstractEntity {
 
     // Constructors, getters, setters, and other methods
 
-    public Tag(int id, String name, String label, String color, TagGroup tagGroup) {
+    public Tag(String label, String color, TagGroup tagGroup) {
         super();
         this.label = label;
         this.color = color;

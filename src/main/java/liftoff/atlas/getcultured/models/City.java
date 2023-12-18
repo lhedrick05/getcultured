@@ -18,7 +18,7 @@ public class City extends AbstractEntity {
 
     }
 
-    public City(int id, String name, String state, List<Tour> tours) {
+    public City(String state, List<Tour> tours) {
         super();
         this.state = state;
         this.tours = tours;

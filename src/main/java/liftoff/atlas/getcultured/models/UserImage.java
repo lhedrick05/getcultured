@@ -17,7 +17,7 @@ public class UserImage extends AbstractEntity {
 
     // Constructors, getters, setters, and other methods
 
-    public UserImage(int id, String name, User user, byte[] imageData) {
+    public UserImage(User user, byte[] imageData) {
         super();
         this.user = user;
         this.imageData = imageData;
