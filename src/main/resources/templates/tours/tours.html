@@ -16,7 +16,7 @@
         <tr>
             <th>Tour ID</th>
             <th>Tour Name</th>
-            <!-- Add more columns as needed -->
+
             <th>Action</th>
         </tr>
         </thead>
@@ -25,7 +25,7 @@
         <tr th:each="tour : ${tours}">
             <td th:text="${tour.id}"></td>
             <td th:text="${tour.name}"></td>
-            <!-- Add more columns as needed -->
+
             <td>
                 <!-- Link to view the details of a tour -->
                 <a th:href="@{/tours/{tourId}(tourId=${tour.id})}">View</a>
@@ -33,7 +33,7 @@
                 <form th:action="@{/tours/{tourId}/delete(tourId=${tour.id})}" method="post">
                     <button type="submit">Delete</button>
                 </form>
-                <!-- Add more actions as needed -->
+
             </td>
         </tr>
         </tbody>
@@ -43,7 +43,6 @@
     <p><a th:href="@{/tours/create}">Create a New Tour</a></p>
 </div>
 
-<!-- Add your script or additional styling here -->
 
 </body>
 </html>

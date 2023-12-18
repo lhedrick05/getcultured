@@ -55,7 +55,7 @@ public class TourController {
             model.addAttribute("tour", new Tour());
 
             tourService.saveTour(tour, image);
-            return "redirect:/tours/tours";
+            return "redirect:/tours";
         } catch (Exception e) {
             e.printStackTrace();
         }
