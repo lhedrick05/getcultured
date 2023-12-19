@@ -1,7 +1,7 @@
 package liftoff.atlas.getcultured.controllers;
 
 import jakarta.servlet.http.HttpSession;
-import liftoff.atlas.getcultured.data.UserRepository;
+import liftoff.atlas.getcultured.models.data.UserRepository;
 import liftoff.atlas.getcultured.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

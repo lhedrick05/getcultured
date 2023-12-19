@@ -2,7 +2,7 @@ package liftoff.atlas.getcultured.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import liftoff.atlas.getcultured.data.UserRepository;
+import liftoff.atlas.getcultured.models.data.UserRepository;
 import liftoff.atlas.getcultured.models.User;
 import liftoff.atlas.getcultured.models.dto.LoginFormDTO;
 import liftoff.atlas.getcultured.models.dto.SignUpFormDTO;
