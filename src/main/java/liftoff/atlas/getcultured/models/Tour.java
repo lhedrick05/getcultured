@@ -8,6 +8,9 @@ import java.util.List;
 
 @Entity
 public class Tour extends AbstractEntity {
+
+//    @NotBlank(message = "Image path cannot be blank")
+    private String imagePath;
     private String summaryDescription;
     private Double estimatedLength;
     private Double estimatedTravelTime;
@@ -31,7 +34,7 @@ public class Tour extends AbstractEntity {
     }
 
     public Tour(String summaryDescription, Double estimatedLength,
-                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city) {
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -40,6 +43,7 @@ public class Tour extends AbstractEntity {
         this.author = author;
         this.location = location;
         this.city = city;
+        this.imagePath = imagePath;
     }
 
     public String getSummaryDescription() {
@@ -104,5 +108,13 @@ public class Tour extends AbstractEntity {
 
     public void setStops(List<Stop> stops) {
         this.stops = stops;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${tour.name}">Tour Details</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${tour.name}">Tour Name</h1>
+
+    <!-- Tour details -->
+    <div class="tour-details">
+        <p><strong>Description:</strong> <span th:text="${tour.summaryDescription}">Description</span></p>
+        <p><strong>Estimated Length:</strong> <span th:text="${tour.estimatedLength}">Length</span></p>
+        <p><strong>Estimated Travel Time:</strong> <span th:text="${tour.estimatedTravelTime}">Travel Time</span></p>
+        <p><strong>User Rating:</strong> <span th:text="${tour.userRating}">Rating</span></p>
+
+        <!-- Check if imagePath is not null and display the image -->
+        <div th:if="${tour.imagePath}">
+            <img th:src="@{'/' + ${tour.imagePath}}" alt="Tour Image" class="tour-image"/>
+        </div>
+
+
+
+        <!-- Add more tour properties as needed -->
+    </div>
+
+    <!-- Back to Tour List link -->
+    <p><a href="/tours" class="back-to-list">Back to Tour List</a></p>
+</div>
+
+<!-- Add your scripts or additional styling here -->
+
+</body>
+</html>

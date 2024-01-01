@@ -15,6 +15,7 @@ public class StopTag extends AbstractEntity {
     @NotNull(message = "Tag cannot be null")
     private Tag tag;
 
+    public StopTag() { }
 
     public StopTag(Stop stop, Tag tag) {
         super();

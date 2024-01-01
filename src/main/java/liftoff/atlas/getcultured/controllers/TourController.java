@@ -3,20 +3,31 @@ package liftoff.atlas.getcultured.controllers;
 import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.models.Tour;
 import liftoff.atlas.getcultured.services.TourService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.SQLOutput;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
 @RequestMapping("/tours")
 public class TourController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TourController.class);
     private final TourService tourService;
 
     @Autowired
@@ -26,7 +37,7 @@ public class TourController {
 
     @GetMapping("/index")
     public String index (Model model){
-        List tour = (List<Tour>) tourService.getAllTours();
+        List<Tour> tour = (List<Tour>) tourService.getAllTours();
         model.addAttribute("tours", tour); // Make sure this is the correct value
         model.addAttribute("title", "All Tours");
         return "tours/index";
@@ -42,26 +53,28 @@ public class TourController {
     // Handling the tour creation form submission
     @PostMapping("/create")
     public String createTour(@ModelAttribute("tour") @Valid Tour tour,
-                             @RequestPart("image") MultipartFile image,
-                             Errors errors, Model model) {
-        try {
-            // Validate the form inputs
-            if (errors.hasErrors()) {
-                model.addAttribute("tour", new Tour());
-                // Log or handle validation errors
-                return "tours/create"; // Return to the form page
-            }
-
-            model.addAttribute("tour", new Tour());
-
-            tourService.saveTour(tour, image);
-            return "redirect:/tours";
-        } catch (Exception e) {
-            e.printStackTrace();
+                             BindingResult bindingResult,
+                             @RequestParam("image") MultipartFile imageFile,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            return "tours/create";
         }
 
-        return "tours/create";
+        try {
+            if (!imageFile.isEmpty()) {
+                tourService.saveTour(tour, imageFile);
+            } else {
+                // Handle the case where no image is uploaded
+                // Maybe set a default imagePath or leave it as null
+            }
+            return "redirect:/tours";
+        } catch (IOException e) {
+            logger.error("Error while saving tour and image", e);
+            model.addAttribute("errorMessage", "Error processing image upload.");
+            return "tours/create";
+        }
     }
+
 
     // Mapping for listing all tours
     @GetMapping
@@ -76,7 +89,7 @@ public class TourController {
     public String viewTour(@PathVariable int tourId, Model model) {
         Tour tour = tourService.getTourById(tourId);
         model.addAttribute("tour", tour);
-        return "viewTour";
+        return "tours/view";
     }
 
     // Mapping for deleting a tour
@@ -87,6 +100,20 @@ public class TourController {
     }
 
     // Other mappings for updating tours, handling reviews, etc.
+
+    @GetMapping("/images/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveImage(@PathVariable String filename) throws MalformedURLException {
+        Path file = Paths.get("src/main/resources/static/images").resolve(filename);
+        if (!Files.exists(file)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource fileResource = new UrlResource(file.toUri());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileResource.getFilename() + "\"")
+                .body(fileResource);
+    }
 
 }
 
