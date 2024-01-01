@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${stop.name} + ' Details'">Stop Details</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${stop.name}">Stop Name</h1>
+
+    <!-- Displaying stop details -->
+    <div class="stop-details">
+        <p><strong>Description:</strong> <span th:text="${stop.stopDescription}">Description</span></p>
+        <p><strong>Address:</strong> <span th:text="${stop.streetAddress}">Street Address</span>,
+            <span th:text="${stop.cityName}">City</span>,
+            <span th:text="${stop.stateName}">State</span>,
+            <span th:text="${stop.zipCode}">Zip Code</span></p>
+        <p><strong>Hours of Operation:</strong> <span th:text="${stop.hoursOfOperation}">Hours</span></p>
+        <p><strong>Rating:</strong> <span th:text="${stop.stopRating}">Rating</span></p>
+
+        <!-- Image display -->
+        <div th:if="${stop.imagePath}">
+            <img th:src="@{'/images/' + ${stop.imagePath}}" alt="Stop Image" class="stop-image" />
+        </div>
+    </div>
+
+    <!-- Back to Tour Details link -->
+    <p><a th:href="@{/tour/{id}(id=${stop.tour.id})}" class="back-to-tour">Back to Tour Details</a></p>
+</div>
+</body>
+</html>

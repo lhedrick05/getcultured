@@ -18,7 +18,7 @@
         <div class="error" th:errors="*{name}"></div>
 
         <!-- Summary Description -->
-        <label for="summaryDescription">Summary Description:</label>
+        <label for="summaryDescription">Description:</label>
         <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required></textarea>
 
         <!-- Estimated Length -->
@@ -65,8 +65,10 @@
                     <hr>
                 </div>
                 <div th:each="stop, iterStat : *{stops}">
-                    <input type="text" th:field="*{stops[__${iterStat.index}__].propertyName}" />
-                    <!-- Replace 'propertyName' with actual property names of the Stop class -->
+                    <!-- Stop Description -->
+                    <input type="text" th:field="*{stops[__${iterStat.index}__].stopDescription}" />
+
+
                 </div>
             </div>
         </div>
@@ -86,7 +88,7 @@
 
 </div>
 
-<!-- Add your script or additional styling here -->
+<!-- Add script or additional styling -->
 
 <script th:inline="javascript">
     function addStop() {

@@ -24,13 +24,24 @@
 
 
         <!-- Add more tour properties as needed -->
+
+        <!-- Iterating through each stop -->
+        <div th:each="stop : ${tour.stops}">
+            <div class="stop-block">
+                <h3 th:text="${stop.name}"></h3>
+                <!-- Other stop details here -->
+                <!-- Link to detailed stop view -->
+                <a th:href="@{/stop/{id}(id=${stop.id})}" th:text="${stop.name}">Stop Name</a>
+            </div>
+        </div>
+
     </div>
 
     <!-- Back to Tour List link -->
     <p><a href="/tours" class="back-to-list">Back to Tour List</a></p>
 </div>
 
-<!-- Add your scripts or additional styling here -->
+<!-- Add scripts or additional styling -->
 
 </body>
 </html>

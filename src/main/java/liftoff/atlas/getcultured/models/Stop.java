@@ -8,6 +8,8 @@ import java.util.List;
 @Entity
 public class Stop extends AbstractEntity {
 
+
+    private String imagePath;
     @ManyToOne
     private Tour tour;
     private boolean stopStatus;
@@ -46,7 +48,7 @@ public class Stop extends AbstractEntity {
 
     public Stop() { }
 
-    public Stop(Tour tour, boolean stopStatus, String stopDescription, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, MapMarker mapMarker, int cost, String hoursOfOperation, int stopRating, String category, boolean popularStopDesignation, List<StopTag> stopTags) {
+    public Stop(Tour tour, boolean stopStatus, String stopDescription, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, MapMarker mapMarker, int cost, String hoursOfOperation, int stopRating, String category, boolean popularStopDesignation, List<StopTag> stopTags, String imagePath) {
         super();
         this.tour = tour;
         this.stopStatus = stopStatus;
@@ -64,6 +66,7 @@ public class Stop extends AbstractEntity {
         this.category = category;
         this.popularStopDesignation = popularStopDesignation;
         this.stopTag = stopTags;
+        this.imagePath = imagePath;
     }
 
     public Tour getTour() {
@@ -192,5 +195,13 @@ public class Stop extends AbstractEntity {
 
     public void setStopTag(List<StopTag> stopTag) {
         this.stopTag = stopTag;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
