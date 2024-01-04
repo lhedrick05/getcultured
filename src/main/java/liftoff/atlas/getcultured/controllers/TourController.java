@@ -115,6 +115,41 @@ public class TourController {
                 .body(fileResource);
     }
 
+    @GetMapping("/update/{id}")
+    public String showUpdateTourForm(@PathVariable("id") int id, Model model) {
+        Tour tour = tourService.getTourById(id);
+        if (tour == null) {
+            // Handle the case where the tour does not exist (optional)
+            return "redirect:/tours";
+        }
+        model.addAttribute("tour", tour);
+        return "tours/update";  // Name of the Thymeleaf template for updating a tour
+    }
+
+    // Mapping to handle the submission of the update form
+    @PostMapping("/update/{id}")
+    public String updateTour(@PathVariable("id") int id,
+                             @ModelAttribute("tour") Tour tour,
+                             BindingResult result,
+                             @RequestParam("image") MultipartFile imageFile) {
+        if (result.hasErrors()) {
+            return "tours/update";
+        }
+
+        try {
+            // Update the tour with the provided data
+            if (imageFile != null && !imageFile.isEmpty()) {
+                tourService.saveTour(tour, imageFile);
+            } else {
+                tourService.saveTour(tour, null);  // Call with null if no new image
+            }
+            return "redirect:/tours/view/" + id;  // Redirect to the view page of the updated tour
+        } catch (Exception e) {
+            // Handle exceptions (e.g., image processing error)
+            return "tours/update";
+        }
+    }
+
 }
 
 

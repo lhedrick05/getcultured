@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +80,24 @@ public class TourService {
 
         // Return the relative path to be saved in the database
         return "images/" + filename; // Just return the relative path
+    }
+
+    public Tour updateTour(int tourId, Tour updatedTourData) {
+        Optional<Tour> existingTourOptional = tourRepository.findById(tourId);
+        if (existingTourOptional.isPresent()) {
+            Tour existingTour = existingTourOptional.get();
+
+            // Update the fields of the existing tour with updatedTourData
+            existingTour.setName(updatedTourData.getName());
+            existingTour.setSummaryDescription(updatedTourData.getSummaryDescription());
+            // Set other fields as needed
+
+            return tourRepository.save(existingTour);
+        } else {
+            // Handle the case where the tour is not found
+            // This could be throwing an exception or any other business logic
+        }
+        return null;
     }
 
 }

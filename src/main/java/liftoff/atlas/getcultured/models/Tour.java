@@ -4,17 +4,42 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Tour extends AbstractEntity {
 
-//    @NotBlank(message = "Image path cannot be blank")
+
     private String imagePath;
     private String summaryDescription;
     private Double estimatedLength;
     private Double estimatedTravelTime;
     private Double userRating;
+
+
+    // Adding timestamp functionality, need to display it on the template still and check the permissions of editing, make only user and admin able to edit the tour.
+    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
+    @ManyToOne
+    private User createdBy;
+    @ManyToOne
+    private User updatedBy;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 
     @ManyToOne
     @JoinColumn(name = "author_id")

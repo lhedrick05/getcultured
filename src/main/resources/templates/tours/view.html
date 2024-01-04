@@ -21,6 +21,9 @@
             <img th:src="@{'/' + ${tour.imagePath}}" alt="Tour Image" class="tour-image"/>
         </div>
 
+        <!-- Button for redirecting to update page -->
+        <a th:href="@{/tours/update/{id}(id=${tour.id})}" class="update-button">Update Tour</a>
+
 
 
         <!-- Add more tour properties as needed -->

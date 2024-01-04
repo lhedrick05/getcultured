@@ -150,3 +150,18 @@ a:hover {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional, for a subtle shadow */
 }
 
+.update-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.update-button:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+
