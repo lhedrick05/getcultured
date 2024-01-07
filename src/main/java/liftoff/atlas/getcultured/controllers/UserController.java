@@ -31,12 +31,6 @@ public class UserController {
         return "redirect:/user/login";
     }
 
-    @GetMapping("login")
-    public String displayUserLoginForm(Model model) {
-        model.addAttribute(new LoginFormDTO());
-        return "user/login";
-    }
-
     @GetMapping("sign-up")
     public String displayUserCreationForm(Model model)  {
         model.addAttribute(new SignUpFormDTO());
@@ -76,6 +70,44 @@ public class UserController {
 
         // TODO: Take to personal profile page to add profile data
         return "redirect:";
+    }
+
+    @GetMapping("login")
+    public String displayUserLoginForm(Model model) {
+        model.addAttribute(new LoginFormDTO());
+        return "user/login";
+    }
+
+    @PostMapping("login")
+    public String processLoginForm(@ModelAttribute @Valid LoginFormDTO loginFormDTO, Errors errors, HttpServletRequest request, Model model) {
+
+        if (errors.hasErrors()) {
+            return "user/login";
+        }
+
+        User theUser = userRepository.findByEmailAddress(loginFormDTO.getEmailAddress());
+
+        if (theUser == null) {
+            errors.rejectValue("emailAddress","emailAddress.notfound", "Unable to locate an account registered to that email address; please try again.");
+            return "user/login";
+        }
+
+        String providedPassword = loginFormDTO.getPassword();
+
+        if (!theUser.isMatchingPassword(providedPassword)) {
+            errors.rejectValue("password", "password.mismatch", "Incorrect password; please try again");
+            return "user/login";
+        }
+
+        AuthenticationController.setUserInSession(request.getSession(), theUser);
+
+        return "redirect:";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/user/login";
     }
 
     @GetMapping("profile")

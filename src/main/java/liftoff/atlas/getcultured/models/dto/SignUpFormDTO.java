@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public class SignUpFormDTO {
 
-    // TODO: Set up validation annotations
     // TODO: Extend from LoginFormDTO to DRY code
 
     @NotNull

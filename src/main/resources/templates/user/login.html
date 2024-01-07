@@ -14,14 +14,15 @@
             <h1>Account Login</h1>
             <form method="post">
                 <div class="form-group">
-                    <label for="email">Email Address: </label>
-                    <input id="email" name="email" />
-                    <!--        <span th:errors="${user.email}" class="error"></span>-->
+                    <label th:for="emailAddress">Email Address: </label>
+                    <input th:field="${loginFormDTO.emailAddress}" />
+                    <p th:errors="${loginFormDTO.emailAddress}" class="error-class"></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Password: </label>
-                    <input id="password" name="password" />
+                    <label th:for="password">Password: </label>
+                    <input th:field="${loginFormDTO.password}" type="password" />
+                    <p th:errors="${loginFormDTO.password}" class="error-class"></p>
                 </div>
 
                 <div class="form-group">

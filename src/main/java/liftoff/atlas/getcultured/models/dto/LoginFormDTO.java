@@ -1,19 +1,20 @@
 package liftoff.atlas.getcultured.models.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class LoginFormDTO {
     // TODO: Set up validation annotations
 
-    private String username;
+    @NotNull
+    @NotBlank (message = "No email provided; please your email to access your account.")
+    @Email (message = "Invalid email format; please enter a valid email to access your account.")
     private String emailAddress;
+
+    @NotNull
+    @NotBlank (message = "No password provided; please enter your password to access your account.")
     private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getEmailAddress() {
         return emailAddress;
