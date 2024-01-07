@@ -66,7 +66,7 @@ public class UserController {
         String password = signUpFormDTO.getPassword();
         String verifyPassword = signUpFormDTO.getVerifyPassword();
         if (!password.equals(verifyPassword)) {
-            errors.rejectValue("password", "passwords.mismatch", "Passwords do not match");
+            errors.rejectValue("verifyPassword", "passwords.mismatch", "Passwords do not match; please enter them again");
             return "user/create-user";
         }
 

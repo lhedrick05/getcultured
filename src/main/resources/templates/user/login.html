@@ -3,27 +3,34 @@
     <head>
         <meta charset="UTF-8">
         <title>Account Login</title>
+
+        <link th:replace="~{fragments :: user-styles}" />
+        <link th:replace="~{fragments :: styles}" />
+
     </head>
     <body>
         <nav th:replace="~{fragments :: user-nav}"></nav>
-        <h1>Account Login</h1>
-        <form method="post">
-            <div class="form-group">
-                <label for="email">Email Address: </label>
-                <input id="email" name="email" />
-        <!--        <span th:errors="${user.email}" class="error"></span>-->
-            </div>
+        <div id="login-container">
+            <h1>Account Login</h1>
+            <form method="post">
+                <div class="form-group">
+                    <label for="email">Email Address: </label>
+                    <input id="email" name="email" />
+                    <!--        <span th:errors="${user.email}" class="error"></span>-->
+                </div>
 
-            <div class="form-group">
-                <label for="password">Password: </label>
-                <input id="password" name="password" />
-            </div>
+                <div class="form-group">
+                    <label for="password">Password: </label>
+                    <input id="password" name="password" />
+                </div>
 
-            <div class="form-group">
-                <input type="submit" value="Log-In" />
-                <span style="font-size: 12px; font-style: italic;"><a href="user/password-reset">I forgot my password</a></span>
-            </div>
-        </form>
-        <p>Don't have an account? <a href="./sign-up">Sign Up!</a></p>
+                <div class="form-group">
+                    <input type="submit" value="Log-In" />
+                    <span style="font-size: 12px; font-style: italic;"><a href="user/password-reset">I forgot my password</a></span>
+                </div>
+            </form>
+            <p>Don't have an account? <a href="./sign-up">Sign Up!</a></p>
+        </div>
+
     </body>
 </html>
