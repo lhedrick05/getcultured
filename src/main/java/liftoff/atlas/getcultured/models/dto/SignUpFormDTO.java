@@ -3,6 +3,7 @@ package liftoff.atlas.getcultured.models.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class SignUpFormDTO {
 
@@ -20,6 +21,7 @@ public class SignUpFormDTO {
 
     @NotNull
     @NotBlank (message = "Password cannot be left blank; please enter a valid password to register an account.")
+    @Size(min=8, max=32, message="Invalid password length; your password must be between 8 - 32 characters in length.")
     private String password;
 
     @NotNull
