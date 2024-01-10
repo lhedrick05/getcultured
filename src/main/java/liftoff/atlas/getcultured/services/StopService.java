@@ -1,5 +1,6 @@
 package liftoff.atlas.getcultured.services;
 
+import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.data.StopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,12 @@ import java.util.UUID;
 @Service
 public class StopService {
 
+    private final StopRepository stopRepository;
+
     @Autowired
-    private StopRepository stopRepository; // Replace with your StopRepository
+    public StopService(StopRepository stopRepository) {
+        this.stopRepository = stopRepository;
+    }
 
     // Method to find a stop by ID
     public Stop findById(int id) {
@@ -72,5 +77,22 @@ public class StopService {
         return "images/" + filename;
     }
 
-    // Other methods as needed...
+    public StopForm getStopFormById(int stopId) {
+        Optional<Stop> stopOptional = stopRepository.findById(stopId);
+        if (stopOptional.isPresent()) {
+            return convertToStopForm(stopOptional.get());
+        }
+        return null; // or throw an exception if preferred
+    }
+
+    private StopForm convertToStopForm(Stop stop) {
+        StopForm stopForm = new StopForm();
+        stopForm.setId(stop.getId());
+        stopForm.setName(stop.getName());
+        stopForm.setDescription(stop.getStopDescription());
+        // Set other fields as necessary
+        return stopForm;
+    }
+
+    // Other methods
 }

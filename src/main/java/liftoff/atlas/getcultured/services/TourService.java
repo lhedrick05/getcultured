@@ -1,6 +1,8 @@
 package liftoff.atlas.getcultured.services;
 
 import jakarta.transaction.Transactional;
+import liftoff.atlas.getcultured.dto.TourForm;
+import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.Tour;
 import liftoff.atlas.getcultured.models.data.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +23,19 @@ import org.springframework.web.multipart.MultipartFile;
 public class TourService {
 
     private static final Logger logger = LoggerFactory.getLogger(TourService.class);
-
     private final TourRepository tourRepository;
-
     private final Path rootLocation; // Image storage location
 
     @Autowired
     public TourService(TourRepository tourRepository) {
         this.tourRepository = tourRepository;
-        this.rootLocation = Paths.get("src/main/resources/static/images"); // Define your image storage path here
+        this.rootLocation = Paths.get("C:/Users/lhedr/LaunchCode/GetCultured/images");
     }
 
-    // Get all tours
     public List<Tour> getAllTours() {
         return (List<Tour>) tourRepository.findAll();
     }
 
-    // Get a tour by ID
     public Tour getTourById(int tourId) {
         return tourRepository.findById(tourId).orElse(null);
     }
@@ -45,23 +43,21 @@ public class TourService {
     @Transactional
     public void saveTour(Tour tour, MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
-            String filename = storeImage(imageFile); // Store the image and get the filename
-            tour.setImagePath(filename); // Save the file path in the Tour object
+            String filename = storeImage(imageFile);
+            tour.setImagePath(filename);
+        } else {
+            String defaultImagePath = "C:/Users/lhedr/LaunchCode/GetCultured/images/DefaultLogo.jpg"; // Path to default image
+            tour.setImagePath(defaultImagePath);
         }
         tourRepository.save(tour);
     }
 
-    // Delete a tour by ID
     @Transactional
     public void deleteTour(int tourId) {
         tourRepository.deleteById(tourId);
     }
 
-    private String storeImage(MultipartFile file) throws IOException {
-        // Define the directory where you want to store images
-        Path imageDirectory = Paths.get("C:/Users/lhedr/LaunchCode/GetCultured/images");
-
-        // Extract the original file extension
+    public String storeImage(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String fileExtension = "";
 
@@ -69,35 +65,51 @@ public class TourService {
             fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
 
-        // Generate a unique filename to avoid overwriting existing files
         String filename = UUID.randomUUID().toString() + fileExtension;
-
-        // Resolve the file path
-        Path filePath = imageDirectory.resolve(filename);
-
-        // Save the file
+        Path filePath = rootLocation.resolve(filename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Return the relative path to be saved in the database
-        return "images/" + filename; // Just return the relative path
+        return "images/" + filename;
     }
 
     public Tour updateTour(int tourId, Tour updatedTourData) {
         Optional<Tour> existingTourOptional = tourRepository.findById(tourId);
         if (existingTourOptional.isPresent()) {
             Tour existingTour = existingTourOptional.get();
-
-            // Update the fields of the existing tour with updatedTourData
             existingTour.setName(updatedTourData.getName());
             existingTour.setSummaryDescription(updatedTourData.getSummaryDescription());
-            // Set other fields as needed
-
+            // ... set other properties ...
             return tourRepository.save(existingTour);
         } else {
-            // Handle the case where the tour is not found
-            // This could be throwing an exception or any other business logic
+            logger.error("Tour not found for ID: " + tourId);
+            // Additional handling for tour not found
+            return null;
         }
-        return null;
     }
 
+    public Tour createTourFromForm(TourForm tourForm, MultipartFile imageFile) throws IOException {
+        Tour tour = new Tour();
+        tour.setName(tourForm.getName());
+        tour.setSummaryDescription(tourForm.getSummaryDescription());
+        // ... set other properties ...
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String filename = storeImage(imageFile);
+            tour.setImagePath(filename);
+        } else {
+            String defaultImagePath = "images/default.jpg"; // Path to default image
+            tour.setImagePath(defaultImagePath);
+        }
+
+        tourForm.getStops().forEach(stopForm -> {
+            Stop stop = new Stop();
+            stop.setName(stopForm.getName());
+            stop.setStopDescription(stopForm.getDescription());
+            // ... set other properties ...
+            tour.addStop(stop);
+        });
+
+        return tourRepository.save(tour);
+    }
 }
+

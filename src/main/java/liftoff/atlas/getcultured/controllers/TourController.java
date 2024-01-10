@@ -1,7 +1,11 @@
 package liftoff.atlas.getcultured.controllers;
 
 import jakarta.validation.Valid;
+import liftoff.atlas.getcultured.dto.StopForm;
+import liftoff.atlas.getcultured.dto.TourForm;
+import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.Tour;
+import liftoff.atlas.getcultured.services.StopService;
 import liftoff.atlas.getcultured.services.TourService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,14 +30,23 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/tours")
+@SessionAttributes("tourForm")
 public class TourController {
 
     private static final Logger logger = LoggerFactory.getLogger(TourController.class);
     private final TourService tourService;
 
+    private final StopService stopService;
+
+    @ModelAttribute("tourForm")
+    public TourForm getTourForm() {
+        return new TourForm(); // This ensures a new form is created if not present in the session
+    }
+
     @Autowired
-    public TourController(TourService tourService) {
+    public TourController(TourService tourService, StopService stopService) {
         this.tourService = tourService;
+        this.stopService = stopService;
     }
 
     @GetMapping("/index")
@@ -43,34 +57,46 @@ public class TourController {
         return "tours/index";
     }
 
-    // Mapping for the tour creation form
+    // Display the form for creating a new tour
     @GetMapping("/create")
     public String showCreateTourForm(Model model) {
-        model.addAttribute("tour", new Tour());
+        if (!model.containsAttribute("tourForm")) {
+            model.addAttribute("tourForm", new TourForm());
+        }
+
+        // Fetch all stops
+        List<Stop> stops = stopService.findAll();
+
+        if (stops.isEmpty()) {
+            // Handle the case where no stops are available
+            model.addAttribute("customStopOption", true);
+        } else {
+            // Provide the list of existing stops to the model
+            model.addAttribute("stops", stops);
+            model.addAttribute("customStopOption", false);
+        }
+
         return "tours/create";
     }
 
     // Handling the tour creation form submission
     @PostMapping("/create")
-    public String createTour(@ModelAttribute("tour") @Valid Tour tour,
+    public String createTour(@ModelAttribute("tourForm") @Valid TourForm tourForm,
                              BindingResult bindingResult,
                              @RequestParam("image") MultipartFile imageFile,
-                             Model model) {
+                             Model model, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "tours/create";
         }
 
         try {
-            if (!imageFile.isEmpty()) {
-                tourService.saveTour(tour, imageFile);
-            } else {
-                // Handle the case where no image is uploaded
-                // Maybe set a default imagePath or leave it as null
-            }
-            return "redirect:/tours";
-        } catch (IOException e) {
-            logger.error("Error while saving tour and image", e);
-            model.addAttribute("errorMessage", "Error processing image upload.");
+            Tour tour = tourService.createTourFromForm(tourForm, imageFile); // Updated to use service method
+            redirectAttributes.addFlashAttribute("successMessage", "Tour created successfully!");
+            sessionStatus.setComplete(); // Mark the session as complete
+            return "redirect:/tours/view/" + tour.getId(); // Redirect to view the created tour
+        } catch (Exception e) { // Catching a broader range of exceptions
+            logger.error("Error while saving tour", e);
+            model.addAttribute("errorMessage", "Error processing the tour.");
             return "tours/create";
         }
     }
@@ -85,11 +111,17 @@ public class TourController {
     }
 
     // Mapping for viewing a specific tour
-    @GetMapping("/{tourId}")
+    @GetMapping("/view/{tourId}")
     public String viewTour(@PathVariable int tourId, Model model) {
         Tour tour = tourService.getTourById(tourId);
-        model.addAttribute("tour", tour);
-        return "tours/view";
+        if (tour != null) {
+            model.addAttribute("tour", tour);
+            return "tours/view"; // This should be the name of your Thymeleaf template for viewing a tour
+        } else {
+            // Handle the case where the tour with the given ID does not exist
+            model.addAttribute("errorMessage", "Tour not found");
+            return "redirect:/tours"; // Redirecting to the list of tours
+        }
     }
 
     // Mapping for deleting a tour
@@ -149,6 +181,29 @@ public class TourController {
             return "tours/update";
         }
     }
+
+    // Method for adding a stop to the tour from the list
+    @GetMapping("/addStop/{stopId}")
+    public String addStopToTour(@PathVariable int stopId,
+                                @ModelAttribute("tourForm") TourForm tourForm,
+                                RedirectAttributes redirectAttributes) {
+        StopForm stopForm = stopService.getStopFormById(stopId);
+        if (stopForm != null) {
+            tourForm.getStops().add(stopForm);
+            redirectAttributes.addFlashAttribute("tourForm", tourForm);
+        }
+        return "redirect:/tours/create";
+    }
+
+    private StopForm convertToStopForm(Stop stop) {
+        StopForm stopForm = new StopForm();
+        stopForm.setId(stop.getId());
+        stopForm.setName(stop.getName());
+        stopForm.setDescription(stop.getStopDescription());
+        // Copy other relevant fields from Stop to StopForm
+        return stopForm;
+    }
+
 
 }
 

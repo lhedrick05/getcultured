@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +53,8 @@ public class Tour extends AbstractEntity {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL)
-    private List<Stop> stops;
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Stop> stops = new ArrayList<>();
 
     public Tour() {
     }
@@ -127,19 +128,32 @@ public class Tour extends AbstractEntity {
         this.city = city;
     }
 
-    public List<Stop> getStops() {
-        return stops;
-    }
-
-    public void setStops(List<Stop> stops) {
-        this.stops = stops;
-    }
-
     public String getImagePath() {
         return imagePath;
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    // Add a method to add a stop to the tour
+    public void addStop(Stop stop) {
+        stops.add(stop);
+        stop.setTour(this);
+    }
+
+    // Remove a stop from the tour
+    public void removeStop(Stop stop) {
+        stops.remove(stop);
+        stop.setTour(null);
+    }
+
+    // Getters and setters for the stops field
+    public List<Stop> getStops() {
+        return stops;
+    }
+
+    public void setStops(List<Stop> stops) {
+        this.stops = stops;
     }
 }

@@ -11,7 +11,7 @@
     <h2>Create Tour</h2>
 
     <!-- Form for creating a new tour with multiple stops -->
-    <form action="/tours/create" method="post" th:object="${tour}" enctype="multipart/form-data">
+    <form action="/tours/create" method="post" th:object="${tourForm}" enctype="multipart/form-data">
         <!-- Tour Name -->
         <label for="tourName">Tour Name:</label>
         <input type="text" id="tourName" name="tourName" th:field="*{name}" required>
@@ -32,51 +32,24 @@
         <!-- Image Preview for Tour -->
         <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
 
-
-
-
         <!-- Stops Section -->
         <div id="stopsSection">
-            <!-- Dynamic section for stops -->
-            <div th:each="stop, stopStat : *{stops}" class="stop">
-                <h3>Stop <span th:text="${stopStat.index + 1}"></span></h3>
-
-                    <!-- Stop Name -->
-                    <div class="form-group">
-                        <label th:for="'stops[' + ${stopStat.index} + '].stopName'">Stop Name:</label>
-                        <input type="text" th:id="'stops[' + ${stopStat.index} + '].stopName'" th:name="'stops[' + ${stopStat.index} + '].stopName'" th:field="*{stops[__${stopStat.index}__].stopName}" required>
-                    </div>
-                    <!-- Stop Description -->
-                    <div class="form-group">
-                        <label th:for="'stops[' + ${stopStat.index} + '].stopDescription'">Stop Description:</label>
-                        <textarea th:id="'stops[' + ${stopStat.index} + '].stopDescription'" th:name="'stops[' + ${stopStat.index} + '].stopDescription'" th:field="*{stops[__${stopStat.index}__].stopDescription}" required></textarea>
-                    </div>
-                    <!-- Image Upload for Stop -->
-                    <label th:for="'stops[' + ${stopStat.index} + '].image'">Stop Image:</label>
-                    <input type="file" th:id="'stops[' + ${stopStat.index} + '].image'" th:name="'stops[' + ${stopStat.index} + '].image'" accept=".jpg, .jpeg, .png" required>
-
-                    <!-- Image Preview -->
-                    <img id="imagePreview_${stopStat.index}" class="image-preview" alt="Image Preview">
-
-                    <!-- Delete Stop Button -->
-                    <button type="button" class="delete-stop-button" onclick="deleteStop(${stopStat.index})">Delete Stop</button>
-
-
-                    <hr>
-                </div>
-                <div th:each="stop, iterStat : *{stops}">
-                    <!-- Stop Description -->
-                    <input type="text" th:field="*{stops[__${iterStat.index}__].stopDescription}" />
-
-
+            <!-- Existing stops (if any) -->
+            <div th:each="stop, iterStat : *{stops}">
+                <div class="stop-info">
+                    <!-- Display stop information here -->
+                    <p th:text="${stop.name}">Stop Name</p>
+                    <!-- Additional stop details can be added here -->
                 </div>
             </div>
         </div>
 
+        <!-- Redirect to list of stops -->
         <div class="button-container">
-            <!-- Add Stop Button -->
-            <button type="button" class="add-stop-button" onclick="addStop()">Add Stop</button>
+            <a href="/stops" class="add-stop-button">Add Stop</a>
+        </div>
 
+        <div class="button-container">
             <!-- Submit (Save Tour) Button -->
             <button type="submit" class="save-button">Save Tour</button>
 
@@ -84,7 +57,7 @@
             <p><a href="/tours" class="back-to-list-link">Back to Tour List</a></p>
         </div>
 
-        </form>
+    </form>
 
 </div>
 
@@ -141,6 +114,13 @@
         } else {
             imgElement.style.display = 'none'; // Hide the image element
         }
+    }
+
+    function handleStopSelection(selectedValue) {
+        if (selectedValue === 'custom') {
+            window.location.href = '/stops/create'; // Redirect to Stop Creation Page
+        }
+        // Handle adding existing stop to the tour (possibly via AJAX or form submission)
     }
 
 </script>
