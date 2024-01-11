@@ -94,5 +94,23 @@ public class StopService {
         return stopForm;
     }
 
+    // Method to create a Stop from StopForm
+    public Stop createStopFromForm(StopForm stopForm, MultipartFile imageFile) throws IOException {
+        Stop stop = new Stop();
+
+        // Set properties from stopForm to stop
+        stop.setName(stopForm.getName());
+        stop.setStopDescription(stopForm.getDescription());
+        // ... set other properties from stopForm ...
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String filename = storeImage(imageFile); // storeImage is a method to save the image and get the filename
+            stop.setImagePath("images/" + filename); // Set the image path in Stop
+        }
+
+        // Save and return the stop entity
+        return stopRepository.save(stop);
+    }
+
     // Other methods
 }

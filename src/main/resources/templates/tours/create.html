@@ -27,7 +27,7 @@
 
         <!-- Image Upload -->
         <label for="image">Tour Image:</label>
-        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required onchange="previewTourImage(this)">
+        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">
 
         <!-- Image Preview for Tour -->
         <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
@@ -46,7 +46,7 @@
 
         <!-- Redirect to list of stops -->
         <div class="button-container">
-            <a href="/stops" class="add-stop-button">Add Stop</a>
+            <a href="/stops" class="add-stop-button">Add or Select Stop</a>
         </div>
 
         <div class="button-container">
@@ -97,7 +97,7 @@
             };
             reader.readAsDataURL(input.files[0]);
         } else {
-            imgElement.src = "";
+            imgElement.src = "C:/Users/lhedr/LaunchCode/GetCultured/images/DefaultLogo.jpg";
         }
     }
 

@@ -46,7 +46,7 @@ public class TourService {
             String filename = storeImage(imageFile);
             tour.setImagePath(filename);
         } else {
-            String defaultImagePath = "C:/Users/lhedr/LaunchCode/GetCultured/images/DefaultLogo.jpg"; // Path to default image
+            String defaultImagePath = "defaultLogo/DefaultLogo.jpg"; // Path to default image
             tour.setImagePath(defaultImagePath);
         }
         tourRepository.save(tour);
@@ -97,7 +97,7 @@ public class TourService {
             String filename = storeImage(imageFile);
             tour.setImagePath(filename);
         } else {
-            String defaultImagePath = "images/default.jpg"; // Path to default image
+            String defaultImagePath = "defaultLogo/DefaultLogo.jpg"; // Path to default image
             tour.setImagePath(defaultImagePath);
         }
 

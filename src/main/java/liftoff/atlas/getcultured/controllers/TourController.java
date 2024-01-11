@@ -66,16 +66,7 @@ public class TourController {
 
         // Fetch all stops
         List<Stop> stops = stopService.findAll();
-
-        if (stops.isEmpty()) {
-            // Handle the case where no stops are available
-            model.addAttribute("customStopOption", true);
-        } else {
-            // Provide the list of existing stops to the model
-            model.addAttribute("stops", stops);
-            model.addAttribute("customStopOption", false);
-        }
-
+        model.addAttribute("stops", stops);
         return "tours/create";
     }
 
@@ -83,17 +74,29 @@ public class TourController {
     @PostMapping("/create")
     public String createTour(@ModelAttribute("tourForm") @Valid TourForm tourForm,
                              BindingResult bindingResult,
-                             @RequestParam("image") MultipartFile imageFile,
+                             @RequestParam(value = "image", required = false) MultipartFile imageFile,
                              Model model, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "tours/create";
         }
 
         try {
-            Tour tour = tourService.createTourFromForm(tourForm, imageFile); // Updated to use service method
+            Tour tour;
+            if (imageFile != null && !imageFile.isEmpty()) {
+                // Create tour with the provided image
+                tour = tourService.createTourFromForm(tourForm, imageFile);
+            } else {
+                // Set default image path if no image is uploaded
+                String defaultImagePath = "defaultLogo/DefaultLogo.jpg";
+                tourForm.setImagePath(defaultImagePath);
+                // Create tour with the default image
+                tour = tourService.createTourFromForm(tourForm, null);
+            }
+
             redirectAttributes.addFlashAttribute("successMessage", "Tour created successfully!");
             sessionStatus.setComplete(); // Mark the session as complete
             return "redirect:/tours/view/" + tour.getId(); // Redirect to view the created tour
+
         } catch (Exception e) { // Catching a broader range of exceptions
             logger.error("Error while saving tour", e);
             model.addAttribute("errorMessage", "Error processing the tour.");
@@ -182,16 +185,36 @@ public class TourController {
         }
     }
 
-    // Method for adding a stop to the tour from the list
-    @GetMapping("/addStop/{stopId}")
-    public String addStopToTour(@PathVariable int stopId,
+    // Method to add a selected stop to the tour
+//    @GetMapping("/create/addStop/{stopId}")
+//    public String addStopToTour(@PathVariable Integer stopId,
+//                                @ModelAttribute("tourForm") TourForm tourForm,
+//                                RedirectAttributes redirectAttributes) {
+//        Stop stop = stopService.findById(stopId);
+//        if (stop != null) {
+//            // Convert Stop to StopForm and add to tourForm
+//            StopForm stopForm = new StopForm();
+//            stopForm.setId(stop.getId());
+//            // ... set other properties ...
+//            tourForm.getStops().add(stopForm);
+//
+//            redirectAttributes.addFlashAttribute("tourForm", tourForm);
+//        }
+//        return "redirect:/tours/create";
+//    }
+
+    @PostMapping("/create/addStop/{stopId}")
+    public String addStopToTour(@PathVariable Integer stopId,
                                 @ModelAttribute("tourForm") TourForm tourForm,
                                 RedirectAttributes redirectAttributes) {
-        StopForm stopForm = stopService.getStopFormById(stopId);
-        if (stopForm != null) {
-            tourForm.getStops().add(stopForm);
-            redirectAttributes.addFlashAttribute("tourForm", tourForm);
+        Stop stop = stopService.findById(stopId);
+        if (stop != null) {
+            StopForm stopForm = convertToStopForm(stop);
+            tourForm.getStops().add(stopForm); // Assuming TourForm has a list of StopForm objects
+        } else {
+            // Handle the case where the stop is not found
         }
+        redirectAttributes.addFlashAttribute("tourForm", tourForm);
         return "redirect:/tours/create";
     }
 
@@ -203,6 +226,27 @@ public class TourController {
         // Copy other relevant fields from Stop to StopForm
         return stopForm;
     }
+
+
+//    // Method to select stops for the tour
+//    @GetMapping("/create/selectStop")
+//    public String selectStopsForTour(@ModelAttribute("tourForm") TourForm tourForm,
+//                                     Model model, RedirectAttributes redirectAttributes) {
+//        List<Stop> stops = stopService.findAll();
+//        model.addAttribute("stops", stops);
+//        redirectAttributes.addFlashAttribute("tourForm", tourForm);
+//        return "redirect:/stops/stops";
+//    }
+
+    // New method to redirect to stop list from tour creation
+    @GetMapping("/create/selectStop")
+    public String selectStopsForTour(@ModelAttribute("tourForm") TourForm tourForm, Model model) {
+        List<Stop> stops = stopService.findAll();
+        model.addAttribute("stops", stops);
+        model.addAttribute("addingStopsToTour", true); // Flag to indicate this view is for adding stops to a tour
+        return "stops/stops"; // Reuse the stops list view with slight modification
+    }
+
 
 
 }

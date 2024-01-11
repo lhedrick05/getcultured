@@ -40,6 +40,10 @@
             <td>
                 <!-- Link to view the details of a stop -->
                 <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>
+                <!-- Button to select the stop for the tour -->
+                <form th:action="@{/tours/create/addStop/{stopId}(stopId=${stop.id})}" method="post">
+                    <button type="submit">Select for Tour</button>
+                </form>
                 <!-- Link to delete a stop -->
                 <form th:action="@{/stops/{stopId}/delete(stopId=${stop.id})}" method="post">
                     <button type="submit" onclick="return confirmDelete()">Delete</button>
@@ -57,6 +61,9 @@
 
     <!-- Link to create a new stop -->
     <p><a th:href="@{/stops/create}">Create a New Stop</a></p>
+
+    <!-- Back to Tour Creation link -->
+    <p><a href="/tours/create" class="back-to-tour-creation">Back to Tour Creation</a></p>
 </div>
 
 </body>

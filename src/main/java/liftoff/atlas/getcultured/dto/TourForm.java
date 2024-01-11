@@ -8,6 +8,9 @@ import java.util.List;
 
 public class TourForm {
 
+
+    private String imagePath;
+
     private String name;
 
     private String summaryDescription;
@@ -65,5 +68,13 @@ public class TourForm {
 
     public void setEstimatedLength(Double estimatedLength) {
         this.estimatedLength = estimatedLength;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

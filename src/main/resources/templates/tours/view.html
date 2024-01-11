@@ -16,10 +16,13 @@
         <p><strong>Estimated Travel Time:</strong> <span th:text="${tour.estimatedTravelTime}">Travel Time</span></p>
         <p><strong>User Rating:</strong> <span th:text="${tour.userRating}">Rating</span></p>
 
-        <!-- Check if imagePath is not null and display the image -->
-        <div th:if="${tour.imagePath}">
-            <img th:src="@{'/' + ${tour.imagePath}}" alt="Tour Image" class="tour-image"/>
-        </div>
+<!--        &lt;!&ndash; Check if imagePath is not null and display the image &ndash;&gt;-->
+<!--        <div th:if="${tour.imagePath}">-->
+<!--            <img th:src="@{'/' + ${tour.imagePath}}" alt="Tour Image" class="tour-image"/>-->
+<!--        </div>-->
+
+        <img th:src="${tour.imagePath != null ? '/' + tour.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Tour Image" class="tour-image"/>
+
 
         <!-- Button for redirecting to update page -->
         <a th:href="@{/tours/update/{id}(id=${tour.id})}" class="update-button">Update Tour</a>
