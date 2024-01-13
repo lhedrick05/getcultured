@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Tour extends AbstractEntity {
@@ -138,14 +139,25 @@ public class Tour extends AbstractEntity {
 
     // Add a method to add a stop to the tour
     public void addStop(Stop stop) {
-        stops.add(stop);
+        this.stops.add(stop);
         stop.setTour(this);
     }
 
-    // Remove a stop from the tour
-    public void removeStop(Stop stop) {
-        stops.remove(stop);
-        stop.setTour(null);
+    // Method to remove a stop by ID
+//    public void removeStop(int stopId) {
+//        this.stops.removeIf(stop -> stop.getId() == stopId);
+//    }
+
+    public void removeStop(int stopId) {
+        Optional<Stop> stopOptional = this.stops.stream()
+                .filter(stop -> stop.getId() == stopId)
+                .findFirst();
+
+        if (stopOptional.isPresent()) {
+            Stop stop = stopOptional.get();
+            this.stops.remove(stop);
+            stop.setTour(null);
+        }
     }
 
     // Getters and setters for the stops field

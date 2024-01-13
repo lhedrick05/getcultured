@@ -32,21 +32,36 @@
         <!-- Image Preview for Tour -->
         <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
 
+<!--        &lt;!&ndash; Stops Section &ndash;&gt;-->
+<!--        <div id="stopsSection">-->
+<!--            &lt;!&ndash; Existing stops (if any) &ndash;&gt;-->
+<!--            <div th:each="stop, iterStat : *{stops}">-->
+<!--                <div class="stop-info">-->
+<!--                    &lt;!&ndash; Display stop information here &ndash;&gt;-->
+<!--                    <p th:text="${stop.name}">Stop Name</p>-->
+<!--                    &lt;!&ndash; Additional stop details can be added here &ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
         <!-- Stops Section -->
         <div id="stopsSection">
-            <!-- Existing stops (if any) -->
+            <!-- Dynamic Fields for Each Stop -->
             <div th:each="stop, iterStat : *{stops}">
+                <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />
                 <div class="stop-info">
-                    <!-- Display stop information here -->
-                    <p th:text="${stop.name}">Stop Name</p>
-                    <!-- Additional stop details can be added here -->
+                    <label>Stop Name:</label>
+                    <span th:text="${stop.name}"></span>
+                    <!-- Add more fields as required -->
+                    <!-- Link to detailed stop view -->
+                    <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>
                 </div>
             </div>
         </div>
 
-        <!-- Redirect to list of stops -->
+        <!-- Button to Open Stop Selection Modal or Page -->
         <div class="button-container">
-            <a href="/stops" class="add-stop-button">Add or Select Stop</a>
+            <a th:href="@{/tours/create/selectStop(context='create')}" class="add-stop-button">Add or Select Stop</a>
         </div>
 
         <div class="button-container">
@@ -123,6 +138,13 @@
         // Handle adding existing stop to the tour (possibly via AJAX or form submission)
     }
 
+</script>
+<script th:inline="javascript">
+    function openStopDetailsPopup(id) {
+    let url = "/stop/" + id;
+    let windowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes,width=800,height=600";
+    window.open(url, "_blank", windowFeatures);
+}
 </script>
 
 </body>

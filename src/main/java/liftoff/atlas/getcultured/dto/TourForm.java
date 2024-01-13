@@ -8,7 +8,6 @@ import java.util.List;
 
 public class TourForm {
 
-
     private String imagePath;
 
     private String name;
@@ -19,9 +18,14 @@ public class TourForm {
 
     private Double estimatedLength;
 
+    private List<StopForm> newStops; // List to hold new stops to be added
+    private List<Integer> stopsToRemove; // List of stop IDs to be removed
+
     public TourForm() {
         this.tour = new Tour();
         this.stops = new ArrayList<>();
+        this.newStops = new ArrayList<>();
+        this.stopsToRemove = new ArrayList<>();
     }
 
     // Getters and setters
@@ -76,5 +80,21 @@ public class TourForm {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public List<StopForm> getNewStops() {
+        return newStops;
+    }
+
+    public void setNewStops(List<StopForm> newStops) {
+        this.newStops = newStops;
+    }
+
+    public List<Integer> getStopsToRemove() {
+        return stopsToRemove;
+    }
+
+    public void setStopsToRemove(List<Integer> stopsToRemove) {
+        this.stopsToRemove = stopsToRemove;
     }
 }

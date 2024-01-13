@@ -9,46 +9,54 @@
 <div class="container">
     <h2>Update Tour</h2>
 
-    <!-- Form for updating an existing tour -->
-    <form action="/tours/update" method="post" th:object="${tour}" enctype="multipart/form-data">
-        <!-- Tour ID (hidden) -->
+    <form action="@{/tours/update/{id}(id=${tour.id})}" method="post" th:object="${tour}" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}">
 
-        <!-- Tour Name -->
         <label for="tourName">Tour Name:</label>
         <input type="text" id="tourName" name="tourName" th:field="*{name}" required>
 
-        <!-- Summary Description -->
         <label for="summaryDescription">Summary Description:</label>
         <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required></textarea>
 
-        <!-- Estimated Length -->
         <label for="estimatedLength">Estimated Length:</label>
         <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
 
-        <!-- Current Image Preview (if available) -->
         <div th:if="${tour.imagePath}">
             <p>Current Image:</p>
             <img th:src="@{'/' + ${tour.imagePath}}" alt="Current Tour Image" class="image-preview"/>
         </div>
 
-        <!-- Image Upload for New Image -->
         <label for="image">Change Tour Image:</label>
         <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewNewImage(this)">
 
-        <!-- New Image Preview -->
         <img id="newImagePreview" class="image-preview" alt="New Tour Image Preview" style="display:none;">
 
+        <!-- List stops -->
+        <div th:each="stop, iterStat : *{stops}">
+            <div class="stop-block">
+                <!-- Make stop name clickable to view stop details -->
+                <p><a th:href="@{/stops/view/{stopId}(stopId=${stop.id})}" th:text="${stop.name}">Stop Name</a></p>
+                <p th:text="${stop.stopDescription}">Stop Description</p>
+                <!-- ... other stop details ... -->
 
-        <!-- Submit Button -->
+                <!-- Button to delete the stop -->
+                <a th:href="@{/tours/{tourId}/removeStop/{stopId}(tourId=${tour.id}, stopId=${stop.id})}" class="delete-stop-button">Remove Stop</a>
+            </div>
+        </div>
+
+        <!-- Section to add stops -->
+        <div>
+            <!-- Add Stop Button for Update Context -->
+            <a href="@{/tours/selectStop(context='update')}" class="add-stop-button">Add Stop</a>
+
+        </div>
+
         <button type="submit" class="save-button">Update Tour</button>
     </form>
 
-    <!-- Back to Tour List link -->
     <p><a href="/tours">Back to Tour List</a></p>
 </div>
 
-<!-- Add your script or additional styling here -->
 <script th:inline="javascript">
     function previewNewImage(input) {
         var preview = document.getElementById('newImagePreview');

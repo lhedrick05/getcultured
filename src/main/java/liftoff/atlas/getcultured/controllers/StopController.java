@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -46,15 +47,21 @@ public class StopController {
     public String createStop(@ModelAttribute("stopForm") @Valid StopForm stopForm,
                              BindingResult bindingResult,
                              @RequestParam("image") MultipartFile imageFile,
-                             @RequestParam("referrer")  String referrer,
+                             @RequestParam(value = "referrer", defaultValue = "stops") String referrer,
                              RedirectAttributes redirectAttributes,
                              Model model) {
         if (bindingResult.hasErrors()) {
             return "stops/create";
         }
         try {
-            stopService.createStopFromForm(stopForm, imageFile);
-            String redirectUrl = "redirect:/".concat(referrer.equals("tourCreation") ? "tours/create" : "stops");
+            Stop stop = stopService.createStopFromForm(stopForm, imageFile);
+            String redirectUrl = "redirect:/";
+            if ("tourCreation".equals(referrer)) {
+                redirectAttributes.addFlashAttribute("selectedStopId", stop.getId());
+                redirectUrl += "tours/create";
+            } else {
+                redirectUrl += "stops";
+            }
             redirectAttributes.addFlashAttribute("message", "Stop created successfully");
             return redirectUrl;
         } catch (IOException e) {
@@ -65,21 +72,40 @@ public class StopController {
     }
 
     // Method to display a specific stop
-    @GetMapping("/{id}")
-    public String viewStop(@PathVariable Integer id, Model model) {
-        Stop stop = stopService.findById(id); // Replace with method to find a stop by id
+    @GetMapping("/{stopId}")
+    public String viewStop(@PathVariable int stopId, Model model) {
+        Stop stop = stopService.findById(stopId);
         if (stop != null) {
             model.addAttribute("stop", stop);
-            return "stopDetails";
+            return "stops/view";
+        } else {
+            // Handle the case where stop is null
+            return "redirect:/stops"; // or an error page
         }
-        return "redirect:/tours"; // Redirect if stop not found
     }
 
     @GetMapping
-    public String listStops(Model model) {
-        List<Stop> stops = stopService.findAll(); // Assuming a method to find all stops
+    public String listStops(Model model, @RequestParam(required = false) String context) {
+        List<Stop> stops = stopService.findAll();
         model.addAttribute("stops", stops);
+
+        // Set context to 'create' or 'update' if provided and valid, otherwise set to 'none'
+        String validContext = (context != null && (context.equals("create") || context.equals("update"))) ? context : "none";
+        model.addAttribute("context", validContext);
+
         return "stops/stops";
+    }
+
+    @GetMapping("/stop/{id}")
+    public ModelAndView getStopDetails(@PathVariable("id") int id) {
+        // Fetch the stop details based on the provided id.
+        Stop stopDetails = stopService.findById(id);
+
+        // Create a ModelAndView object with the stop details.
+        ModelAndView modelAndView = new ModelAndView("stop-details");
+        modelAndView.addObject("stopDetails", stopDetails);
+
+        return modelAndView;
     }
 
 

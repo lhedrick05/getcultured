@@ -16,17 +16,18 @@
             <span th:text="${stop.cityName}">City</span>,
             <span th:text="${stop.stateName}">State</span>,
             <span th:text="${stop.zipCode}">Zip Code</span></p>
-        <p><strong>Hours of Operation:</strong> <span th:text="${stop.hoursOfOperation}">Hours</span></p>
+<!--        <p><strong>Hours of Operation:</strong> <span th:text="${stop.hoursOfOperation}">Hours</span></p>-->
         <p><strong>Rating:</strong> <span th:text="${stop.stopRating}">Rating</span></p>
 
         <!-- Image display -->
-        <div th:if="${stop.imagePath}">
-            <img th:src="@{'/images/' + ${stop.imagePath}}" alt="Stop Image" class="stop-image" />
-        </div>
+        <img th:src="${stop.imagePath != null ? '/' + stop.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Stop Image" class="stop-image"/>
+
+
     </div>
 
-    <!-- Back to Tour Details link -->
-    <p><a th:href="@{/tour/{id}(id=${stop.tour.id})}" class="back-to-tour">Back to Tour Details</a></p>
+    <!-- Back to Stop List link -->
+    <p><a href="/stops" class="back-to-list">Back to Stop List</a></p>
+
 </div>
 </body>
 </html>

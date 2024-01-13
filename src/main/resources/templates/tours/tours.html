@@ -39,7 +39,7 @@
 
             <td>
                 <!-- Link to view the details of a tour -->
-                <a th:href="@{/tours/view/{tourId}(tourId=${tour.id})}">View Tour</a>
+                <a th:href="@{/tours/view/{tourId}(tourId=${tour.id})}">View</a>
                 <!-- Link to delete a tour -->
                 <form th:action="@{/tours/{tourId}/delete(tourId=${tour.id})}" method="post">
                     <button type="submit" onclick="return confirmDelete()">Delete</button>

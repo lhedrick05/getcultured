@@ -101,11 +101,16 @@ public class StopService {
         // Set properties from stopForm to stop
         stop.setName(stopForm.getName());
         stop.setStopDescription(stopForm.getDescription());
+        stop.setStreetAddress(stopForm.getStreetAddress());
+        stop.setCityName(stopForm.getCityName());
+        stop.setStateName(stopForm.getStateName());
+        stop.setZipCode(stopForm.getZipCode());
+
         // ... set other properties from stopForm ...
 
         if (imageFile != null && !imageFile.isEmpty()) {
             String filename = storeImage(imageFile); // storeImage is a method to save the image and get the filename
-            stop.setImagePath("images/" + filename); // Set the image path in Stop
+            stop.setImagePath(filename); // Set the image path in Stop
         }
 
         // Save and return the stop entity
