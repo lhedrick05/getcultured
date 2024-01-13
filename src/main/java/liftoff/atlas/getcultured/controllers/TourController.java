@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/tours")
@@ -199,22 +200,6 @@ public class TourController {
         }
     }
 
-
-//    @PostMapping("/create/addStop/{stopId}")
-//    public String addStopToTourCreation(@PathVariable Integer stopId,
-//                                        @ModelAttribute("tourForm") TourForm tourForm,
-//                                        RedirectAttributes redirectAttributes) {
-//        Stop stop = stopService.findById(stopId);
-//        if (stop != null) {
-//            StopForm stopForm = convertToStopForm(stop);
-//            tourForm.getStops().add(stopForm);
-//            tourForm.getStops().add(convertToStopForm(stop));
-//            redirectAttributes.addFlashAttribute("tourForm", tourForm);
-//        }
-//        return "redirect:/tours/create";
-//    }
-
-    // Trying new method
     @GetMapping("/create/addStop/{stopId}")
     public String addStopToTourCreation(@PathVariable Integer stopId,
                                         @ModelAttribute("tourForm") TourForm tourForm,
@@ -303,9 +288,6 @@ public class TourController {
         List<Stop> stops = stopService.findAll();
         return ResponseEntity.ok(stops); // Sends the list of stops as JSON
     }
-
-
-
 
 }
 

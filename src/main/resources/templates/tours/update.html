@@ -47,7 +47,8 @@
         <!-- Section to add stops -->
         <div>
             <!-- Add Stop Button for Update Context -->
-            <a href="@{/tours/selectStop(context='update')}" class="add-stop-button">Add Stop</a>
+<!--            <a href="@{/tours/selectStop(context='update')}" class="add-stop-button">Add Stop</a>-->
+            <a th:href="@{/tours/update/selectStop(context='update')}" class="add-stop-button">Add or Select Stop</a>
 
         </div>
 

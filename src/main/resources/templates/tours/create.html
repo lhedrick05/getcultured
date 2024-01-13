@@ -12,38 +12,6 @@
 
     <!-- Form for creating a new tour with multiple stops -->
     <form action="/tours/create" method="post" th:object="${tourForm}" enctype="multipart/form-data">
-        <!-- Tour Name -->
-        <label for="tourName">Tour Name:</label>
-        <input type="text" id="tourName" name="tourName" th:field="*{name}" required>
-        <div class="error" th:errors="*{name}"></div>
-
-        <!-- Summary Description -->
-        <label for="summaryDescription">Description:</label>
-        <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required></textarea>
-
-        <!-- Estimated Length -->
-        <label for="estimatedLength">Estimated Length:</label>
-        <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
-
-        <!-- Image Upload -->
-        <label for="image">Tour Image:</label>
-        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">
-
-        <!-- Image Preview for Tour -->
-        <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
-
-<!--        &lt;!&ndash; Stops Section &ndash;&gt;-->
-<!--        <div id="stopsSection">-->
-<!--            &lt;!&ndash; Existing stops (if any) &ndash;&gt;-->
-<!--            <div th:each="stop, iterStat : *{stops}">-->
-<!--                <div class="stop-info">-->
-<!--                    &lt;!&ndash; Display stop information here &ndash;&gt;-->
-<!--                    <p th:text="${stop.name}">Stop Name</p>-->
-<!--                    &lt;!&ndash; Additional stop details can be added here &ndash;&gt;-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <!-- Stops Section -->
         <div id="stopsSection">
             <!-- Dynamic Fields for Each Stop -->
@@ -63,6 +31,26 @@
         <div class="button-container">
             <a th:href="@{/tours/create/selectStop(context='create')}" class="add-stop-button">Add or Select Stop</a>
         </div>
+
+        <!-- Tour Name -->
+        <label for="tourName">Tour Name:</label>
+        <input type="text" id="tourName" name="tourName" th:field="*{name}" required>
+        <div class="error" th:errors="*{name}"></div>
+
+        <!-- Summary Description -->
+        <label for="summaryDescription">Description:</label>
+        <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required></textarea>
+
+        <!-- Estimated Length -->
+        <label for="estimatedLength">Estimated Length:</label>
+        <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
+
+        <!-- Image Upload -->
+        <label for="image">Tour Image:</label>
+        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">
+
+        <!-- Image Preview for Tour -->
+        <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
 
         <div class="button-container">
             <!-- Submit (Save Tour) Button -->
@@ -138,13 +126,32 @@
         // Handle adding existing stop to the tour (possibly via AJAX or form submission)
     }
 
-</script>
-<script th:inline="javascript">
-    function openStopDetailsPopup(id) {
-    let url = "/stop/" + id;
-    let windowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes,width=800,height=600";
-    window.open(url, "_blank", windowFeatures);
+    function updateTourFormAndSelectStop() {
+    var formData = {
+        'name': $('#tourName').val(),
+        'summaryDescription': $('#summaryDescription').val(),
+        'estimatedLength': $('#estimatedLength').val(),
+        // Include other fields as necessary
+    };
+
+    fetch('/tours/create/updateForm', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // Include CSRF token if necessary
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if(response.ok) {
+            window.location.href = '/tours/create/selectStop'; // Redirect to stop selection
+        } else {
+            console.error('Error updating tour form');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
+
 </script>
 
 </body>

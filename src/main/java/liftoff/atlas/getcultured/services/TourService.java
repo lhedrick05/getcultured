@@ -99,6 +99,7 @@ public class TourService {
         Tour tour = new Tour();
         tour.setName(tourForm.getName());
         tour.setSummaryDescription(tourForm.getSummaryDescription());
+        tour.setEstimatedLength(tourForm.getEstimatedLength());
         // ... set other properties ...
 
         if (imageFile != null && !imageFile.isEmpty()) {

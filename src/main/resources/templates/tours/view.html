@@ -13,13 +13,10 @@
     <div class="tour-details">
         <p><strong>Description:</strong> <span th:text="${tour.summaryDescription}">Description</span></p>
         <p><strong>Estimated Length:</strong> <span th:text="${tour.estimatedLength}">Length</span></p>
-        <p><strong>Estimated Travel Time:</strong> <span th:text="${tour.estimatedTravelTime}">Travel Time</span></p>
-        <p><strong>User Rating:</strong> <span th:text="${tour.userRating}">Rating</span></p>
+<!--        <p><strong>Estimated Travel Time:</strong> <span th:text="${tour.estimatedTravelTime}">Travel Time</span></p>-->
+<!--        <p><strong>User Rating:</strong> <span th:text="${tour.userRating}">Rating</span></p>-->
 
         <img th:src="${tour.imagePath != null ? '/' + tour.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Tour Image" class="tour-image"/>
-
-        <!-- Button for redirecting to update page -->
-        <a th:href="@{/tours/update/{id}(id=${tour.id})}" class="update-button">Update Tour</a>
 
         <!-- Add more tour properties as needed -->
 
@@ -33,6 +30,11 @@
             </div>
         </div>
 
+        <!-- Button for redirecting to update page -->
+        <div class="button-container">
+            <a th:href="@{/tours/update/{id}(id=${tour.id})}" class="update-button">Update Tour</a>
+
+        </div>
     </div>
 
     <!-- Back to Tour List link -->

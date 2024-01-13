@@ -17,10 +17,10 @@
             <th>Tour ID</th>
             <th>Name</th>
             <th>Estimated Distance</th>
-            <th>Duration (minutes)</th>
-            <th>Rating</th>
-            <th>Author's Username</th>
-            <th>City</th>
+<!--            <th>Duration (minutes)</th>-->
+<!--            <th>Rating</th>-->
+<!--            <th>Author's Username</th>-->
+<!--            <th>City</th>-->
             <th>Number of Stops</th>
             <th>Action</th>
         </tr>
@@ -31,13 +31,13 @@
             <td th:text="${tour.id}"></td>
             <td th:text="${tour.name}"></td>
             <td th:text="${tour.estimatedLength}" style="text-align: center;"></td>
-            <td th:text="${tour.estimatedTravelTime}" style="text-align: center;"></td>
-            <td th:text="${tour.userRating}" style="text-align: center;"></td>
-            <td th:text="${tour.author}"></td>
-            <td th:text="${tour.city}"></td>
+<!--            <td th:text="${tour.estimatedTravelTime}" style="text-align: center;"></td>-->
+<!--            <td th:text="${tour.userRating}" style="text-align: center;"></td>-->
+<!--            <td th:text="${tour.author}"></td>-->
+<!--            <td th:text="${tour.city}"></td>-->
             <td th:text="${tour.stops.size()}" style="text-align: center;"></td>
 
-            <td>
+            <td class="action-buttons">
                 <!-- Link to view the details of a tour -->
                 <a th:href="@{/tours/view/{tourId}(tourId=${tour.id})}">View</a>
                 <!-- Link to delete a tour -->

@@ -1,5 +1,6 @@
 package liftoff.atlas.getcultured.dto;
 
+import jakarta.annotation.ManagedBean;
 import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.Tour;
 
