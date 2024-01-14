@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +88,11 @@ public class TourController {
         }
 
         try {
+            List<StopForm> stops = tourForm.getStops();
+            if (stops == null) {
+                stops = new ArrayList<>();
+            }
+
             Tour tour;
             if (imageFile != null && !imageFile.isEmpty()) {
                 // Create tour with the provided image
@@ -200,9 +207,24 @@ public class TourController {
         }
     }
 
+//    @GetMapping("/create/addStop/{stopId}")
+//    public String addStopToTourCreation(@PathVariable Integer stopId,
+//                                        @ModelAttribute("tourForm") TourForm tourForm,
+//                                        RedirectAttributes redirectAttributes) {
+//        Stop stop = stopService.findById(stopId);
+//        if (stop != null) {
+//            StopForm stopForm = convertToStopForm(stop);
+//            tourForm.getStops().add(stopForm);
+//            redirectAttributes.addFlashAttribute("tourForm", tourForm);
+//        }
+//        return "redirect:/tours/create";
+//    }
+
+    // Method to add a stop to the tour during creation
     @GetMapping("/create/addStop/{stopId}")
     public String addStopToTourCreation(@PathVariable Integer stopId,
                                         @ModelAttribute("tourForm") TourForm tourForm,
+                                        @RequestParam(required = false) String context,
                                         RedirectAttributes redirectAttributes) {
         Stop stop = stopService.findById(stopId);
         if (stop != null) {
@@ -210,7 +232,8 @@ public class TourController {
             tourForm.getStops().add(stopForm);
             redirectAttributes.addFlashAttribute("tourForm", tourForm);
         }
-        return "redirect:/tours/create";
+        // Redirect back to the tour creation page with context
+        return "redirect:/tours/create?context=" + (context != null ? context : "");
     }
 
     private StopForm convertToStopForm(Stop stop) {
@@ -257,17 +280,32 @@ public class TourController {
     }
 
 
-    @GetMapping("/{tourId}/removeStop/{stopId}")
-    public String removeStopFromTour(@PathVariable int tourId, @PathVariable int stopId, RedirectAttributes redirectAttributes) {
+//    @GetMapping("/{tourId}/removeStop/{stopId}")
+//    public String removeStopFromTour(@PathVariable int tourId, @PathVariable int stopId, RedirectAttributes redirectAttributes) {
+//        try {
+//            tourService.removeStopFromTour(tourId, stopId);
+//            redirectAttributes.addFlashAttribute("successMessage", "Stop removed successfully!");
+//        } catch (Exception e) {
+//            logger.error("Error removing stop from tour", e);
+//            redirectAttributes.addFlashAttribute("errorMessage", "Error removing stop.");
+//        }
+//        return "redirect:/tours/update/" + tourId;
+//    }
+
+    @PostMapping("/create/removeStop")
+    public ResponseEntity<?> removeStopFromTourForm(@ModelAttribute("tourForm") TourForm tourForm,
+                                                    @RequestParam("stopIndex") int stopIndex) {
         try {
-            tourService.removeStopFromTour(tourId, stopId);
-            redirectAttributes.addFlashAttribute("successMessage", "Stop removed successfully!");
+            if (tourForm.getStops() != null && tourForm.getStops().size() > stopIndex) {
+                tourForm.getStops().remove(stopIndex);
+            }
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
-            logger.error("Error removing stop from tour", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "Error removing stop.");
+            logger.error("Error removing stop from tour form", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return "redirect:/tours/update/" + tourId;
     }
+
 
     @PostMapping("/update/{tourId}/addStop/{stopId}")
     public String addStopToTourUpdate(@PathVariable Integer tourId, @PathVariable Integer stopId,

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.naming.Context;
 import java.io.IOException;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class StopController {
     @PostMapping("/create")
     public String createStop(@ModelAttribute("stopForm") @Valid StopForm stopForm,
                              BindingResult bindingResult,
-                             @RequestParam("image") MultipartFile imageFile,
+                             @RequestParam(value = "image", required = false) MultipartFile imageFile,
                              @RequestParam(value = "referrer", defaultValue = "stops") String referrer,
                              RedirectAttributes redirectAttributes,
                              Model model) {
@@ -54,7 +55,18 @@ public class StopController {
             return "stops/create";
         }
         try {
-            Stop stop = stopService.createStopFromForm(stopForm, imageFile);
+            Stop stop;
+            if (imageFile != null && !imageFile.isEmpty()) {
+                // Create stop with the provided image
+                stop = stopService.createStopFromForm(stopForm, imageFile);
+            } else {
+                // Set default image path if no image is uploaded
+                String defaultImagePath = "defaultLogo/DefaultLogo.jpg";
+                stopForm.setImagePath(defaultImagePath);
+                // Create stop with the default image
+                stop = stopService.createStopFromForm(stopForm, null);
+            }
+
             String redirectUrl = "redirect:/";
             if ("tourCreation".equals(referrer)) {
                 redirectAttributes.addFlashAttribute("selectedStopId", stop.getId());
@@ -73,10 +85,12 @@ public class StopController {
 
     // Method to display a specific stop
     @GetMapping("/{stopId}")
-    public String viewStop(@PathVariable int stopId, Model model) {
+    public String viewStop(@PathVariable int stopId, @RequestParam(required = false) Integer tourId, Model model, @RequestParam(required = false) String context) {
         Stop stop = stopService.findById(stopId);
         if (stop != null) {
             model.addAttribute("stop", stop);
+            model.addAttribute("tourId", tourId);
+            model.addAttribute("context", context); // Add context to the model
             return "stops/view";
         } else {
             // Handle the case where stop is null
@@ -106,6 +120,19 @@ public class StopController {
         modelAndView.addObject("stopDetails", stopDetails);
 
         return modelAndView;
+    }
+
+    // Mapping for deleting a tour
+    @GetMapping("/{stopId}/delete")
+    public String deleteStop(@PathVariable int stopId, RedirectAttributes redirectAttributes) {
+        try {
+            stopService.deleteStop(stopId);
+            redirectAttributes.addFlashAttribute("successMessage", "Stop deleted successfully");
+        } catch (Exception e) {
+            logger.error("Error while deleting stop", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting stop.");
+        }
+        return "redirect:/stops";
     }
 
 

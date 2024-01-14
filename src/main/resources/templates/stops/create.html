@@ -6,7 +6,6 @@
     <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 <body>
-
 <div class="container">
     <h2>Create Stop</h2>
 
@@ -68,7 +67,7 @@
 
         <!-- Image Upload -->
         <label for="image">Stop Image:</label>
-        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required onchange="previewStopImage(this)">
+        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewStopImage(this)">
 
         <!-- Image Preview -->
         <img id="stopImagePreview" class="image-preview" alt="Stop Image" style="display:none;">

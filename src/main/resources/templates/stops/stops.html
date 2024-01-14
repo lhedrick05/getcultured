@@ -6,7 +6,6 @@
     <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 <body>
-
 <div class="container">
     <h2>Stop List</h2>
 
@@ -38,9 +37,21 @@
             <td th:text="${stop.stopRating}" style="text-align: center;"></td>
 
             <td>
-                <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>
+<!--                <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>-->
                 <p>Current context: <span th:text="${context}"></span></p>
 
+                <div th:if="${context == 'update'}">
+                    <!-- Button for updating a tour -->
+                    <a th:href="@{/stops/{stopId}(stopId=${stop.id}, context='update')}">View</a>
+                </div>
+                <div th:if="${context == 'create'}">
+                    <!-- Button for creating a new tour -->
+                    <a th:href="@{/stops/{stopId}(stopId=${stop.id}, context='create')}">View</a>
+                </div>
+                <div th:if="${context == 'none'}">
+                    <!-- Button for creating a new tour -->
+                    <a th:href="@{/stops/{stopId}(stopId=${stop.id}, context='none')}">View</a>
+                </div>
 
                 <!-- Conditionally render the button based on context -->
                 <div th:if="${context == 'update'}">
@@ -53,7 +64,7 @@
                 </div>
 
 
-                <form th:action="@{/stops/{stopId}/delete(stopId=${stop.id})}" method="post">
+                <form th:action="@{/stops/{stopId}/delete(stopId=${stop.id})}" method="get">
                     <button type="submit" onclick="return confirmDelete()">Delete</button>
                 </form>
             </td>
@@ -67,8 +78,12 @@
         </script>
     </table>
 
-    <!-- Link to create a new stop -->
-    <p><a th:href="@{/stops/create}">Create a New Stop</a></p>
+
+    <div th:if="${context == 'none'}">
+        <!-- Button for creating a new tour -->
+        <!-- Link to create a new stop -->
+        <p><a th:href="@{/stops/create}">Create a New Stop</a></p>
+    </div>
 
     <!-- Conditional back link based on the context -->
     <div th:if="${context == 'create'}">
@@ -77,6 +92,10 @@
     <div th:if="${context == 'update'}">
         <p><a th:href="@{/tours/update/{id}(id=${tourId})}" class="back-to-tour-update">Back to Tour Update</a></p>
     </div>
+
+    <!-- Back to Index link -->
+    <p><a href="/tours/index" class="back-to-index">Back to Homepage</a></p>
+
 
 </div>
 

@@ -2,6 +2,7 @@ package liftoff.atlas.getcultured.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
 import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.Tour;
@@ -14,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -95,6 +97,45 @@ public class TourService {
         }
     }
 
+//    public Tour createTourFromForm(TourForm tourForm, MultipartFile imageFile) throws IOException {
+//        Tour tour = new Tour();
+//        tour.setName(tourForm.getName());
+//        tour.setSummaryDescription(tourForm.getSummaryDescription());
+//        tour.setEstimatedLength(tourForm.getEstimatedLength());
+//        // ... set other properties ...
+//
+//        if (imageFile != null && !imageFile.isEmpty()) {
+//            String filename = storeImage(imageFile);
+//            tour.setImagePath(filename);
+//        } else {
+//            String defaultImagePath = "defaultLogo/DefaultLogo.jpg"; // Path to default image
+//            tour.setImagePath(defaultImagePath);
+//        }
+//
+//        tourForm.getStops().forEach(stopForm -> {
+//            Stop stop;
+//            if (stopForm.getId() != null) {
+//                stop = stopService.findById(stopForm.getId());
+//                if (stop == null) {
+//                    // handle the case where stop is not found
+//                }
+//            } else {
+//                stop = new Stop();
+//                stop.setName(stopForm.getName());
+//                stop.setStopDescription(stopForm.getDescription());
+//                stop.setStreetAddress(stopForm.getStreetAddress());
+//                stop.setCityName(stopForm.getCityName());
+//                stop.setStateName(stopForm.getStateName());
+//                stop.setZipCode(stopForm.getZipCode());
+//                // set other properties from stopForm
+//                // possibly save the new stop
+//            }
+//            tour.addStop(stop);
+//        });
+//
+//        return tourRepository.save(tour);
+//    }
+
     public Tour createTourFromForm(TourForm tourForm, MultipartFile imageFile) throws IOException {
         Tour tour = new Tour();
         tour.setName(tourForm.getName());
@@ -110,7 +151,20 @@ public class TourService {
             tour.setImagePath(defaultImagePath);
         }
 
-        tourForm.getStops().forEach(stopForm -> {
+        List<StopForm> updatedStops = tourForm.getStops();
+        List<Stop> currentStops = new ArrayList<>(tour.getStops());
+
+        // Remove stops that have been deleted
+        for (int i = 0; i < currentStops.size(); i++) {
+            Stop currentStop = currentStops.get(i);
+            if (!updatedStops.contains(currentStop)) {
+                tour.getStops().remove(i);
+                i--;
+            }
+        }
+
+        // Add new stops and update existing stops
+        for (StopForm stopForm : updatedStops) {
             Stop stop;
             if (stopForm.getId() != null) {
                 stop = stopService.findById(stopForm.getId());
@@ -128,8 +182,9 @@ public class TourService {
                 // set other properties from stopForm
                 // possibly save the new stop
             }
+            stop.setTour(tour);
             tour.addStop(stop);
-        });
+        }
 
         return tourRepository.save(tour);
     }

@@ -12,20 +12,55 @@
 
     <!-- Form for creating a new tour with multiple stops -->
     <form action="/tours/create" method="post" th:object="${tourForm}" enctype="multipart/form-data">
+<!--        &lt;!&ndash; Stops Section &ndash;&gt;-->
+<!--        <div id="stopsSection">-->
+<!--            &lt;!&ndash; Dynamic Fields for Each Stop &ndash;&gt;-->
+<!--            <div th:each="stop, iterStat : *{stops}">-->
+<!--                <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />-->
+<!--                <div class="stop-info">-->
+<!--                    <label>Stop Name:</label>-->
+<!--                    <span th:text="${stop.name}"></span>-->
+<!--                    &lt;!&ndash; Add more fields as required &ndash;&gt;-->
+<!--                    &lt;!&ndash; Link to detailed stop view &ndash;&gt;-->
+<!--&lt;!&ndash;                    <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>&ndash;&gt;-->
+<!--                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="${stop.name}">View</a>-->
+<!--                    <button type="button" class="delete-stop-button" onclick="confirmDeleteStop(${iterStat.index})">Delete Stop</button>-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Stops Section &ndash;&gt;-->
+<!--        <div id="stopsSection">-->
+<!--            &lt;!&ndash; Dynamic Fields for Each Stop &ndash;&gt;-->
+<!--            <div th:each="stop, iterStat : *{stops}" class="stop-item">-->
+<!--                <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />-->
+<!--                <div class="stop-info">-->
+<!--                    <label>Stop Name:</label>-->
+<!--                    <span th:text="${stop.name}"></span>-->
+<!--                    &lt;!&ndash; Add more fields as required &ndash;&gt;-->
+<!--                    &lt;!&ndash; Link to detailed stop view &ndash;&gt;-->
+<!--                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="${stop.name}">View</a>-->
+<!--                    <button type="button" class="delete-stop-button" data-stop-index="${iterStat.index}">Delete Stop</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
         <!-- Stops Section -->
         <div id="stopsSection">
             <!-- Dynamic Fields for Each Stop -->
-            <div th:each="stop, iterStat : *{stops}">
+            <div th:each="stop, iterStat : *{stops}" class="stop-item" th:id="'stop-' + ${iterStat.index}">
                 <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />
                 <div class="stop-info">
                     <label>Stop Name:</label>
                     <span th:text="${stop.name}"></span>
-                    <!-- Add more fields as required -->
                     <!-- Link to detailed stop view -->
-                    <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>
+                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="${stop.name}">View</a>
+                    <button type="button" class="delete-stop-button" th:attr="data-stop-index=${iterStat.index}" onclick="confirmDeleteStop(this)">Delete Stop</button>
                 </div>
             </div>
         </div>
+
 
         <!-- Button to Open Stop Selection Modal or Page -->
         <div class="button-container">
@@ -70,7 +105,7 @@
     function addStop() {
         let stopIndex = document.getElementById("stopsSection").childElementCount;
 
-        let newStopHtml = '<div class="stop">' +
+        let newStopHtml = '<div class="stop" id="stop-' + stopIndex + '">' +
             '<h3>Stop ' + (stopIndex + 1) + '</h3>' +
             '<label for="stops[' + stopIndex + '].stopName">Stop Name:</label>' +
             '<input type="text" id="stops[' + stopIndex + '].stopName" name="stops[' + stopIndex + '].stopName" required>' +
@@ -79,17 +114,65 @@
             '<label for="stops[' + stopIndex + '].image">Stop Image:</label>' +
             '<input type="file" id="stops[' + stopIndex + '].image" name="stops[' + stopIndex + '].image" accept=".jpg, .jpeg, .png" onchange="previewImage(this, \'imagePreview_' + stopIndex + '\')" required>' +
             '<img id="imagePreview_' + stopIndex + '" class="image-preview" alt="Image Preview">' +
-            '<button type="button" class="delete-stop-button" onclick="deleteStop(' + stopIndex + ')">Delete Stop</button>' +
+            '<button type="button" class="delete-stop-button" onclick="confirmDeleteStop(' + stopIndex + ')">Delete Stop</button>' +
             '<hr>' +
             '</div>';
 
         document.getElementById("stopsSection").insertAdjacentHTML("beforeend", newStopHtml);
     }
 
-    function deleteStop(index) {
-        let stopElement = document.getElementById("stopsSection").children[index];
-        stopElement.parentNode.removeChild(stopElement);
+    document.addEventListener('DOMContentLoaded', function() {
+    bindDeleteButtons();
+});
+
+function bindDeleteButtons() {
+    var deleteButtons = document.querySelectorAll('.delete-stop-button');
+    deleteButtons.forEach(function(button) {
+        button.onclick = function() {
+            var stopIndex = this.getAttribute('data-stop-index');
+            confirmDeleteStop(stopIndex);
+        };
+    });
+}
+
+function confirmDeleteStop(index) {
+    if (confirm('Are you sure you want to delete this stop?')) {
+        deleteStop(index);
+        updateStopIndices();
     }
+}
+
+function deleteStop(index) {
+    var stopElement = document.getElementById('stop-' + index);
+    if (stopElement) {
+        stopElement.remove();
+        // Send AJAX request to remove stop from server-side form
+        fetch('/tours/create/removeStop', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                // Include CSRF token if necessary
+            },
+            body: 'stopIndex=' + index
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error removing stop on server');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+
+function updateStopIndices() {
+    document.querySelectorAll('.stop-item').forEach((element, index) => {
+        element.id = 'stop-' + index;
+        element.querySelector('.delete-stop-button').setAttribute('data-stop-index', index);
+        // Update any other fields that depend on the index
+    });
+}
+
 
     function previewImage(input, imgId) {
         let imgElement = document.getElementById(imgId);
@@ -106,16 +189,14 @@
 
     function previewTourImage(input) {
         let imgElement = document.getElementById('tourImagePreview');
-        console.log(imgElement); // Should not be null if the element is found
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                imgElement.style.display = 'block'; // Show the image element
+            let reader = new FileReader();
+            reader.onload = function (e) {
                 imgElement.src = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
         } else {
-            imgElement.style.display = 'none'; // Hide the image element
+            imgElement.src = "";
         }
     }
 
@@ -127,31 +208,30 @@
     }
 
     function updateTourFormAndSelectStop() {
-    var formData = {
-        'name': $('#tourName').val(),
-        'summaryDescription': $('#summaryDescription').val(),
-        'estimatedLength': $('#estimatedLength').val(),
-        // Include other fields as necessary
-    };
+        var formData = {
+            'name': $('#tourName').val(),
+            'summaryDescription': $('#summaryDescription').val(),
+            'estimatedLength': $('#estimatedLength').val(),
+            // Include other fields as necessary
+        };
 
-    fetch('/tours/create/updateForm', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // Include CSRF token if necessary
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        if(response.ok) {
-            window.location.href = '/tours/create/selectStop'; // Redirect to stop selection
-        } else {
-            console.error('Error updating tour form');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
+        fetch('/tours/create/updateForm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include CSRF token if necessary
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if(response.ok) {
+                window.location.href = '/tours/create/selectStop'; // Redirect to stop selection
+            } else {
+                console.error('Error updating tour form');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 </script>
 
 </body>

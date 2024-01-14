@@ -17,11 +17,13 @@ public class StopForm {
     private String category;
     private boolean popular;
 
+    private String imagePath;
+
     // Constructors
     public StopForm() {
     }
 
-    public StopForm(int id, String name, String description, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, double cost, String hoursOfOperation, double rating, String category, boolean popular) {
+    public StopForm(int id, String name, String description, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, double cost, String hoursOfOperation, double rating, String category, boolean popular, String imagePath) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,10 +38,19 @@ public class StopForm {
         this.rating = rating;
         this.category = category;
         this.popular = popular;
+        this.imagePath = imagePath;
     }
 
     // Getters and Setters
 
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     public Integer getId() {
         return id;

@@ -1,5 +1,6 @@
 package liftoff.atlas.getcultured.services;
 
+import jakarta.transaction.Transactional;
 import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.data.StopRepository;
@@ -47,6 +48,7 @@ public class StopService {
     }
 
     // Method to delete a stop
+    @Transactional
     public void deleteStop(int id) {
         stopRepository.deleteById(id);
     }
