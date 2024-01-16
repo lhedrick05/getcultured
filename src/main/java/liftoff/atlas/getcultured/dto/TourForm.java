@@ -9,6 +9,8 @@ import java.util.List;
 
 public class TourForm {
 
+    private int id;
+
     private String imagePath;
 
     private String name;
@@ -30,6 +32,16 @@ public class TourForm {
     }
 
     // Getters and setters
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Tour getTour() {
         return tour;
     }

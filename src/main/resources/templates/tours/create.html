@@ -12,39 +12,6 @@
 
     <!-- Form for creating a new tour with multiple stops -->
     <form action="/tours/create" method="post" th:object="${tourForm}" enctype="multipart/form-data">
-<!--        &lt;!&ndash; Stops Section &ndash;&gt;-->
-<!--        <div id="stopsSection">-->
-<!--            &lt;!&ndash; Dynamic Fields for Each Stop &ndash;&gt;-->
-<!--            <div th:each="stop, iterStat : *{stops}">-->
-<!--                <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />-->
-<!--                <div class="stop-info">-->
-<!--                    <label>Stop Name:</label>-->
-<!--                    <span th:text="${stop.name}"></span>-->
-<!--                    &lt;!&ndash; Add more fields as required &ndash;&gt;-->
-<!--                    &lt;!&ndash; Link to detailed stop view &ndash;&gt;-->
-<!--&lt;!&ndash;                    <a th:href="@{/stops/{stopId}(stopId=${stop.id})}">View</a>&ndash;&gt;-->
-<!--                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="${stop.name}">View</a>-->
-<!--                    <button type="button" class="delete-stop-button" onclick="confirmDeleteStop(${iterStat.index})">Delete Stop</button>-->
-
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; Stops Section &ndash;&gt;-->
-<!--        <div id="stopsSection">-->
-<!--            &lt;!&ndash; Dynamic Fields for Each Stop &ndash;&gt;-->
-<!--            <div th:each="stop, iterStat : *{stops}" class="stop-item">-->
-<!--                <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />-->
-<!--                <div class="stop-info">-->
-<!--                    <label>Stop Name:</label>-->
-<!--                    <span th:text="${stop.name}"></span>-->
-<!--                    &lt;!&ndash; Add more fields as required &ndash;&gt;-->
-<!--                    &lt;!&ndash; Link to detailed stop view &ndash;&gt;-->
-<!--                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="${stop.name}">View</a>-->
-<!--                    <button type="button" class="delete-stop-button" data-stop-index="${iterStat.index}">Delete Stop</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
 
         <!-- Stops Section -->
         <div id="stopsSection">
@@ -53,9 +20,9 @@
                 <input type="hidden" th:field="*{stops[__${iterStat.index}__].id}" />
                 <div class="stop-info">
                     <label>Stop Name:</label>
-                    <span th:text="${stop.name}"></span>
+                    <span th:text="${stop.stopName}"></span>
                     <!-- Link to detailed stop view -->
-                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="${stop.name}">View</a>
+                    <a th:href="@{/stops/{id}(id=${stop.id}, context='create')}" th:text="'View Stop'">View</a>
                     <button type="button" class="delete-stop-button" th:attr="data-stop-index=${iterStat.index}" onclick="confirmDeleteStop(this)">Delete Stop</button>
                 </div>
             </div>
@@ -64,7 +31,7 @@
 
         <!-- Button to Open Stop Selection Modal or Page -->
         <div class="button-container">
-            <a th:href="@{/tours/create/selectStop(context='create')}" class="add-stop-button">Add or Select Stop</a>
+            <a th:href="@{/tours/create/selectStop(context='create')}" class="add-stop-button">Select Stop</a>
         </div>
 
         <!-- Tour Name -->
@@ -126,10 +93,10 @@
 });
 
 function bindDeleteButtons() {
-    var deleteButtons = document.querySelectorAll('.delete-stop-button');
+    let deleteButtons = document.querySelectorAll('.delete-stop-button');
     deleteButtons.forEach(function(button) {
         button.onclick = function() {
-            var stopIndex = this.getAttribute('data-stop-index');
+            let stopIndex = this.getAttribute('data-stop-index');
             confirmDeleteStop(stopIndex);
         };
     });
@@ -143,7 +110,7 @@ function confirmDeleteStop(index) {
 }
 
 function deleteStop(index) {
-    var stopElement = document.getElementById('stop-' + index);
+    let stopElement = document.getElementById('stop-' + index);
     if (stopElement) {
         stopElement.remove();
         // Send AJAX request to remove stop from server-side form
@@ -208,7 +175,7 @@ function updateStopIndices() {
     }
 
     function updateTourFormAndSelectStop() {
-        var formData = {
+        let formData = {
             'name': $('#tourName').val(),
             'summaryDescription': $('#summaryDescription').val(),
             'estimatedLength': $('#estimatedLength').val(),

@@ -23,11 +23,12 @@
         <!-- Iterating through each stop -->
         <div th:each="stop : ${tour.stops}">
             <div class="stop-block">
-                <h3 th:text="${stop.name}"></h3>
+                <label>Stop Name:</label>
+                <h3 th:text="${stop.name}" style="color: black;"></h3>
                 <!-- Other stop details here -->
                 <!-- Link to detailed stop view -->
 <!--                <a th:href="@{/stop/{id}(id=${stop.id})}" th:text="${stop.name}">Stop Name</a>-->
-                <a th:href="@{/stops/{stopId}(stopId=${stop.id}, tourId=${tour.id})}" th:text="${stop.name}">Stop Name</a>
+                <a th:href="@{/stops/{stopId}(stopId=${stop.id}, tourId=${tour.id})}" th:text="View">Stop Name</a>
             </div>
         </div>
 

@@ -3,15 +3,17 @@ package liftoff.atlas.getcultured.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Stop extends AbstractEntity {
 
+    private int updateId;
 
     private String imagePath;
-    @ManyToOne
-    private Tour tour;
+    @ManyToMany(mappedBy = "stops")
+    private List<Tour> tours = new ArrayList<>();
     private boolean stopStatus;
     @Size(max = 300, message = "Description can be no longer than 300 characters")
     private String stopDescription;
@@ -48,9 +50,9 @@ public class Stop extends AbstractEntity {
 
     public Stop() { }
 
-    public Stop(Tour tour, boolean stopStatus, String stopDescription, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, MapMarker mapMarker, int cost, String hoursOfOperation, int stopRating, String category, boolean popularStopDesignation, List<StopTag> stopTags, String imagePath) {
+    public Stop(List<Tour> tours, boolean stopStatus, String stopDescription, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, MapMarker mapMarker, int cost, String hoursOfOperation, int stopRating, String category, boolean popularStopDesignation, List<StopTag> stopTags, String imagePath, int updateId) {
         super();
-        this.tour = tour;
+        this.tours = tours;
         this.stopStatus = stopStatus;
         this.stopDescription = stopDescription;
         this.streetAddress = streetAddress;
@@ -67,14 +69,19 @@ public class Stop extends AbstractEntity {
         this.popularStopDesignation = popularStopDesignation;
         this.stopTag = stopTags;
         this.imagePath = imagePath;
+        this.updateId = updateId;
     }
 
-    public Tour getTour() {
-        return tour;
+    public void setUpdateId(int updateId) {
+        this.updateId = updateId;
     }
 
-    public void setTour(Tour tour) {
-        this.tour = tour;
+    public List<Tour> getTours() {
+        return tours;
+    }
+
+    public void setTours(List<Tour> tours) {
+        this.tours = tours;
     }
 
     public boolean isStopStatus() {

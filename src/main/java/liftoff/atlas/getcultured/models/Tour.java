@@ -3,6 +3,7 @@ package liftoff.atlas.getcultured.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import liftoff.atlas.getcultured.dto.StopForm;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Optional;
 @Entity
 public class Tour extends AbstractEntity {
 
+    private int updateId;
 
     private String imagePath;
     private String summaryDescription;
@@ -54,14 +56,22 @@ public class Tour extends AbstractEntity {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Stop> stops = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "tour_stop",
+            joinColumns = @JoinColumn(name = "tour_id"),
+            inverseJoinColumns = @JoinColumn(name = "stop_id")
+    )
     private List<Stop> stops = new ArrayList<>();
 
     public Tour() {
     }
 
     public Tour(String summaryDescription, Double estimatedLength,
-                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath) {
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -71,6 +81,11 @@ public class Tour extends AbstractEntity {
         this.location = location;
         this.city = city;
         this.imagePath = imagePath;
+        this.updateId = updateId;
+    }
+
+    public void setUpdateId(int updateId) {
+        this.updateId = updateId;
     }
 
     public String getSummaryDescription() {
@@ -139,26 +154,31 @@ public class Tour extends AbstractEntity {
 
     // Add a method to add a stop to the tour
     public void addStop(Stop stop) {
-        this.stops.add(stop);
-        stop.setTour(this);
+        stops.add(stop);
+        stop.getTours().add(this);
     }
 
     // Method to remove a stop by ID
+    public void removeStop(Stop stop) {
+        stops.remove(stop);
+        stop.getTours().remove(this);
+    }
+
 //    public void removeStop(int stopId) {
 //        this.stops.removeIf(stop -> stop.getId() == stopId);
 //    }
 
-    public void removeStop(int stopId) {
-        Optional<Stop> stopOptional = this.stops.stream()
-                .filter(stop -> stop.getId() == stopId)
-                .findFirst();
-
-        if (stopOptional.isPresent()) {
-            Stop stop = stopOptional.get();
-            this.stops.remove(stop);
-            stop.setTour(null);
-        }
-    }
+//    public void removeStop(int stopId) {
+//        Optional<Stop> stopOptional = this.stops.stream()
+//                .filter(stop -> stop.getId() == stopId)
+//                .findFirst();
+//
+//        if (stopOptional.isPresent()) {
+//            Stop stop = stopOptional.get();
+//            this.stops.remove(stop);
+//            stop.setTour(null);
+//        }
+//    }
 
     // Getters and setters for the stops field
     public List<Stop> getStops() {

@@ -90,7 +90,7 @@ public class StopService {
     private StopForm convertToStopForm(Stop stop) {
         StopForm stopForm = new StopForm();
         stopForm.setId(stop.getId());
-        stopForm.setName(stop.getName());
+        stopForm.setStopName(stop.getName());
         stopForm.setDescription(stop.getStopDescription());
         // Set other fields as necessary
         return stopForm;
@@ -101,12 +101,20 @@ public class StopService {
         Stop stop = new Stop();
 
         // Set properties from stopForm to stop
-        stop.setName(stopForm.getName());
+        stop.setName(stopForm.getStopName());
         stop.setStopDescription(stopForm.getDescription());
         stop.setStreetAddress(stopForm.getStreetAddress());
         stop.setCityName(stopForm.getCityName());
         stop.setStateName(stopForm.getStateName());
         stop.setZipCode(stopForm.getZipCode());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String filename = storeImage(imageFile);
+            stop.setImagePath(filename);
+        } else {
+            String defaultImagePath = "defaultLogo/DefaultLogo.jpg"; // Path to default image
+            stop.setImagePath(defaultImagePath);
+        }
 
         // ... set other properties from stopForm ...
 

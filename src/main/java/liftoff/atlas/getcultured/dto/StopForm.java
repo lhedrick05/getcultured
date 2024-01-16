@@ -3,7 +3,7 @@ package liftoff.atlas.getcultured.dto;
 public class StopForm {
 
     private int id;
-    private String name;
+    private String stopName;
     private String description;
     private String streetAddress;
     private String cityName;
@@ -23,9 +23,9 @@ public class StopForm {
     public StopForm() {
     }
 
-    public StopForm(int id, String name, String description, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, double cost, String hoursOfOperation, double rating, String category, boolean popular, String imagePath) {
+    public StopForm(int id, String stopName, String description, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, double cost, String hoursOfOperation, double rating, String category, boolean popular, String imagePath) {
         this.id = id;
-        this.name = name;
+        this.stopName = stopName;
         this.description = description;
         this.streetAddress = streetAddress;
         this.cityName = cityName;
@@ -60,12 +60,12 @@ public class StopForm {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getStopName() {
+        return stopName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStopName(String stopName) {
+        this.stopName = stopName;
     }
 
     public String getDescription() {

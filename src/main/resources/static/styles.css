@@ -246,3 +246,32 @@ th {
         max-width: 100%;
     }
 }
+
+.label-section {
+    margin-top: 20px;
+}
+
+.stop-block {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.delete-stop-button {
+    display: inline-block;
+    margin-top: 10px; /* Space above the delete button */
+}
+
+.cancel-button {
+    display: inline-block;
+    margin-top: 10px; /* Space above the delete button */
+}
+
+.add-stop-section {
+    margin-top: 30px; /* Space above the add stop section */
+}
+
+.save-button-section {
+    margin-top: 30px; /* Space above the save button */
+}

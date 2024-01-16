@@ -13,8 +13,8 @@
     <form action="/stops/create" method="post" th:object="${stopForm}" enctype="multipart/form-data">
         <!-- Stop Name -->
         <label for="stopName">Stop Name:</label>
-        <input type="text" id="stopName" name="stopName" th:field="*{name}" required>
-        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        <input type="text" id="stopName" name="stopName" th:field="*{stopName}" required>
+        <div class="error" th:if="${#fields.hasErrors('stopName')}" th:errors="*{stopName}"></div>
 
         <!-- Stop Description -->
         <label for="stopDescription">Stop Description:</label>
