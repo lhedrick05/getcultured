@@ -1,11 +1,13 @@
 package liftoff.atlas.getcultured.dto;
 
 import jakarta.annotation.ManagedBean;
-import liftoff.atlas.getcultured.models.Stop;
-import liftoff.atlas.getcultured.models.Tour;
+import jakarta.validation.constraints.NotNull;
+import liftoff.atlas.getcultured.models.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TourForm {
 
@@ -17,6 +19,20 @@ public class TourForm {
 
     private String summaryDescription;
     private Tour tour;
+
+//    private City city;
+//
+//    private TourCategory tourCategory;
+//
+//    private Tag tag;
+
+    @NotNull(message = "City is required")
+    private Integer cityId;
+
+    @NotNull(message = "Category is required")
+    private Integer categoryId;
+
+    private Set<Integer> tagIds = new HashSet<>();
     private List<StopForm> stops;
 
     private Double estimatedLength;
@@ -25,7 +41,19 @@ public class TourForm {
     private List<Integer> stopsToRemove; // List of stop IDs to be removed
 
     public TourForm() {
+        // Default constructor
+        this.stops = new ArrayList<>();
+    }
+
+    public TourForm(Integer cityId, Integer categoryId, Set<Integer> tagIds, List<StopForm> stops) {
         this.tour = new Tour();
+        this.cityId = cityId;
+        this.categoryId = categoryId;
+        this.tagIds = tagIds;
+//        this.tag = new Tag();
+//        this.city = new City();
+//        this.tourCategory = new TourCategory();
+//        this.stops = new ArrayList<>();
         this.stops = new ArrayList<>();
         this.newStops = new ArrayList<>();
         this.stopsToRemove = new ArrayList<>();
@@ -48,6 +76,55 @@ public class TourForm {
 
     public void setTour(Tour tour) {
         this.tour = tour;
+    }
+
+//    public Tag getTag() {
+//        return tag;
+//    }
+//
+//    public void setTag(Tag tag) {
+//        this.tag = tag;
+//    }
+//
+//    public City getCity() {
+//        return city;
+//    }
+//
+//    public void setCity(City city) {
+//        this.city = city;
+//    }
+//
+//    public TourCategory getTourCategory() {
+//        return tourCategory;
+//    }
+//
+//    public void setTourCategory(TourCategory tourCategory) {
+//        this.tourCategory = tourCategory;
+//    }
+
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Set<Integer> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(Set<Integer> tagIds) {
+        this.tagIds = tagIds;
     }
 
     public List<StopForm> getStops() {

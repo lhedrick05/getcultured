@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<header th:replace="~{fragments :: page-header}"></header>
+<div id="admin-bar">
+    <div class="nav">
+        <a class="navlink" href="/tags">View All Tags</a>
+        <a class="navlink" href="/tags/delete">Delete A Tag</a>
+        <span class="faux-link">Search</span>
+
+    </div>
+</div>
+<main>
+    <form action="/tags/add"  method="POST">
+        <h3>Add a Tag</h3>
+        <div class="container">
+            <div class="row">
+                <div class="form-item">
+                    <label th:for="name">Tag Name</label>
+                    <input th:field="${tag.name}" />
+                    <p class="error" th:errors="${tag.name}"></p>
+                </div>
+                <div class="form-item">
+                    <label th:for="color">Tag Color</label>
+                    <input th:field="${tag.color}" />
+                    <p class="error" th:errors="${tag.color}"></p>
+                </div>
+                <div class="form-item">
+                    <label th:for="label">Tag Label</label>
+                    <input th:field="${tag.label}" />
+                    <p class="error" th:errors="${tag.label}"></p>
+                </div>
+            </div>
+        </div>
+        <button type="submit">Add Tag</button>
+    </form>
+</main>
+
+</body>
+</html>

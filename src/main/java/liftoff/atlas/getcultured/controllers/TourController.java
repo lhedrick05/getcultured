@@ -4,8 +4,10 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
-import liftoff.atlas.getcultured.models.Stop;
-import liftoff.atlas.getcultured.models.Tour;
+import liftoff.atlas.getcultured.models.*;
+import liftoff.atlas.getcultured.models.data.CityRepository;
+import liftoff.atlas.getcultured.models.data.TagRepository;
+import liftoff.atlas.getcultured.models.data.TourCategoryRepository;
 import liftoff.atlas.getcultured.services.StopService;
 import liftoff.atlas.getcultured.services.TourService;
 import org.slf4j.Logger;
@@ -45,6 +47,16 @@ public class TourController {
     @Autowired
     private final StopService stopService;
 
+    @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
+    private TourCategoryRepository tourCategoryRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+
     @ModelAttribute("tourForm")
     public TourForm getTourForm() {
         return new TourForm(); // This ensures a new form is created if not present in the session
@@ -72,11 +84,20 @@ public class TourController {
             model.addAttribute("tourForm", new TourForm());
         }
 
-        // Fetch all stops
+        // Fetch all stops, cities, categories, and tags
         List<Stop> stops = stopService.findAll();
+        List<City> cities = (List<City>) cityRepository.findAll();
+        List<TourCategory> tourCategories = (List<TourCategory>) tourCategoryRepository.findAll();
+        List<Tag> tags = (List<Tag>) tagRepository.findAll();
+
+        // Add stops, cities, categories, and tags to the model
         model.addAttribute("stops", stops);
+        model.addAttribute("cities", cities);
+        model.addAttribute("tourCategories", tourCategories);
+        model.addAttribute("tags", tags);
         model.addAttribute("context", "create"); // Set context for creating a tour
         return "tours/create";
+
     }
 
     // Handling the tour creation form submission
@@ -86,6 +107,17 @@ public class TourController {
                              @RequestParam(value = "image", required = false) MultipartFile imageFile,
                              Model model, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            // Fetch all stops, cities, categories, and tags
+            List<Stop> stops = stopService.findAll();
+            List<City> cities = (List<City>) cityRepository.findAll();
+            List<TourCategory> tourCategories = (List<TourCategory>) tourCategoryRepository.findAll();
+            List<Tag> tags = (List<Tag>) tagRepository.findAll();
+
+            // Add stops, cities, categories, and tags to the model
+            model.addAttribute("stops", stops);
+            model.addAttribute("cities", cities);
+            model.addAttribute("tourCategories", tourCategories);
+            model.addAttribute("tags", tags);
             return "tours/create";
         }
 

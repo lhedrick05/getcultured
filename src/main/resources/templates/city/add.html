@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<header th:replace="~{fragments :: page-header}"></header>
+<div id="admin-bar">
+    <div class="nav">
+        <a class="navlink" href="/city">All Cities</a>
+        <span class="faux-link">Search</span>
+        <a class="navlink" href="/city/delete">Delete A City</a>
+    </div>
+</div>
+<main>
+    <form method="POST" style="max-width:600px;">
+        <h3>Add a City</h3>
+        <div class="container">
+            <div class="form-item">
+                <label th:for="cityName">City</label>
+                <input class="form-control" th:field="${city.name}" />
+                <span th:errors="${city.name}" class="error"></span>
+            </div>
+            <div class="form-item">
+                <label th:for="state">State</label>
+                <input class="form-control" th:field="${city.state}" />
+                <span th:errors="${city.state}" class="error"></span>
+            </div>
+        </div>
+        <button type="submit">Add City</button>
+    </form>
+</main>
+</body>
+</html>

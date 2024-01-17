@@ -4,10 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
-import liftoff.atlas.getcultured.models.Stop;
-import liftoff.atlas.getcultured.models.Tour;
-import liftoff.atlas.getcultured.models.data.StopRepository;
-import liftoff.atlas.getcultured.models.data.TourRepository;
+import liftoff.atlas.getcultured.models.*;
+import liftoff.atlas.getcultured.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
@@ -30,13 +28,22 @@ public class TourService {
 
     private final StopRepository stopRepository;
 
+    private final CityRepository cityRepository;
+
+    private final TourCategoryRepository tourCategoryRepository;
+
+    private final TagRepository tagRepository;
+
     private final StopService stopService;
     private final Path rootLocation; // Image storage location
 
     @Autowired
-    public TourService(TourRepository tourRepository, StopRepository stopRepository, StopService stopService) {
+    public TourService(TourRepository tourRepository, StopRepository stopRepository, CityRepository cityRepository, TourCategoryRepository tourCategoryRepository, TagRepository tagRepository, StopService stopService) {
         this.tourRepository = tourRepository;
         this.stopRepository = stopRepository;
+        this.cityRepository = cityRepository;
+        this.tourCategoryRepository = tourCategoryRepository;
+        this.tagRepository = tagRepository;
         this.stopService = stopService;
         this.rootLocation = Paths.get("C:/Users/lhedr/LaunchCode/GetCultured/images");
     }
@@ -86,6 +93,20 @@ public class TourService {
         Tour tour = new Tour();
         // Set basic properties from the form
         setBasicTourPropertiesFromForm(tour, tourForm);
+
+        // Set city
+        City city = cityRepository.findById(tourForm.getCityId())
+                .orElseThrow(() -> new EntityNotFoundException("City not found with ID: " + tourForm.getCityId()));
+        tour.setCity(city);
+
+        // Set category
+        TourCategory category = tourCategoryRepository.findById(tourForm.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + tourForm.getCategoryId()));
+        tour.setTourCategory(category);
+
+        // Set tags
+        Set<Tag> tags = (Set<Tag>) tagRepository.findAllById(tourForm.getTagIds());
+        tour.setTags(tags);
 
         // Handle image upload
         handleTourImageUpload(tour, imageFile);

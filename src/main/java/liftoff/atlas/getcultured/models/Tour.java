@@ -5,10 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import liftoff.atlas.getcultured.dto.StopForm;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 public class Tour extends AbstractEntity {
@@ -56,6 +53,22 @@ public class Tour extends AbstractEntity {
     @JoinColumn(name = "city_id")
     private City city;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @NotNull(message="Category is required")
+    private TourCategory tourCategory;
+
+//    @ManyToMany
+//    private final List<Tag> tags = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "tour_tags",
+            joinColumns = @JoinColumn(name = "tour_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
 //    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Stop> stops = new ArrayList<>();
 
@@ -71,7 +84,7 @@ public class Tour extends AbstractEntity {
     }
 
     public Tour(String summaryDescription, Double estimatedLength,
-                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId) {
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, TourCategory tourCategory, String imagePath, int updateId) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -80,6 +93,7 @@ public class Tour extends AbstractEntity {
         this.author = author;
         this.location = location;
         this.city = city;
+        this.tourCategory = tourCategory;
         this.imagePath = imagePath;
         this.updateId = updateId;
     }
@@ -142,6 +156,22 @@ public class Tour extends AbstractEntity {
 
     public void setCity(City city) {
         this.city = city;
+    }
+
+    public TourCategory getTourCategory() {
+        return tourCategory;
+    }
+
+    public void setTourCategory(TourCategory tourCategory) {
+        this.tourCategory = tourCategory;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     public String getImagePath() {

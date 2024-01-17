@@ -47,6 +47,40 @@
         <label for="estimatedLength">Estimated Length:</label>
         <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
 
+        <!-- Add City -->
+        <div class="form-item col-2">
+            <label th:for="cityId">City</label>
+            <select name="cityId">
+                <option th:each="city : ${cities}"
+                        th:text="${city.name}"
+                        th:value="${city.id}"></option>
+            </select>
+            <a th:href="@{'/city/add'}">Add City</a>
+        </div>
+
+        <!-- Add Category -->
+        <div class="form-item col-2">
+            <label th:for="tourCategory">Category</label>
+            <select name="tourCategoryId">
+                <option th:each="tourCategory : ${tourCategories}"
+                        th:value="tourCategory.id"
+                        th:text="${tourCategory.name}"
+                ></option>
+            </select>
+            <a th:href="@{'/tourCategories/add'}">Add Category</a>
+        </div>
+
+        <!-- Add Tags -->
+        <div class="form-item col-2">
+            <label th:for="tag">Tags</label>
+            <select name="tagId">
+                <option th:each="tag : ${tags}"
+                        th:text="${tag.name}"
+                        th:value="${tag.id}"></option>
+            </select>
+            <a th:href="@{'/tags/add'}">Add Tag</a>
+        </div>
+
         <!-- Image Upload -->
         <label for="image">Tour Image:</label>
         <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">

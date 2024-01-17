@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<header th:replace="~{fragments :: page-header}"></header>
+<div id="admin-bar">
+    <div class="nav">
+        <a class="navlink" href="/tags/add">Add Tag</a>
+        <a class="navlink" href="/tags/delete">Delete Tag</a>
+        <span class="faux-link">Search</span>
+
+    </div>
+</div>
+<main>
+    <h2>TAGS</h2>
+    <table class="table table striped">
+        <thead>
+        <tr>
+            <th>Tag Name</th>
+            <th>Label</th>
+        </tr>
+        </thead>
+        <tr th:each="tag : ${tags}">
+            <td th:text="${tag.name}"></td>
+            <td th:text="${tag.label}"></td>
+        </tr>
+    </table>
+</main>
+</body>
+</html>

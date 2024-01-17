@@ -23,4 +23,7 @@ public interface TourRepository extends CrudRepository<Tour, Integer> {
 //
 //    // Find Tours with a Tag:
 //    List<Tour> findByTourTags(Tag tag);
+
+    List<Tour> findByCity(City city);
+
 }
