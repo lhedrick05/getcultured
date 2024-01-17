@@ -43,8 +43,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserReview> tourFeedback;
 
-    public User() {}
-
     public User(String username, String emailAddress, String password) {
         this.username = username;
         this.emailAddress = emailAddress;

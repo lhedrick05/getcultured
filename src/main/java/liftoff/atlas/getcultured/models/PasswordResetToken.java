@@ -17,6 +17,7 @@ public class PasswordResetToken extends AbstractEntity {
 
     private LocalDateTime expiryDateTime;
 
+    public PasswordResetToken() { }
 
     public PasswordResetToken(User user, String token, LocalDateTime expiryDateTime) {
         super();
