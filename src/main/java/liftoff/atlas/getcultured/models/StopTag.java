@@ -21,7 +21,6 @@ public class StopTag extends AbstractEntity {
         super();
         this.stop = stop;
         this.tag = tag;
-
     }
 
     public Stop getStop() {
