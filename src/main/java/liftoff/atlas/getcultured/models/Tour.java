@@ -67,7 +67,7 @@ public class Tour extends AbstractEntity {
             joinColumns = @JoinColumn(name = "tour_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<Tag> tags = new HashSet<>();
+    private List<Tag> tags = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Stop> stops = new ArrayList<>();
@@ -84,7 +84,7 @@ public class Tour extends AbstractEntity {
     }
 
     public Tour(String summaryDescription, Double estimatedLength,
-                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, TourCategory tourCategory, String imagePath, int updateId) {
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, TourCategory tourCategory, String imagePath, int updateId, List<Tag> tags) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -96,6 +96,7 @@ public class Tour extends AbstractEntity {
         this.tourCategory = tourCategory;
         this.imagePath = imagePath;
         this.updateId = updateId;
+        this.tags = tags;
     }
 
     public void setUpdateId(int updateId) {
@@ -166,11 +167,11 @@ public class Tour extends AbstractEntity {
         this.tourCategory = tourCategory;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

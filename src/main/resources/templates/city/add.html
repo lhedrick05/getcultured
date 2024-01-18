@@ -21,10 +21,29 @@
             </div>
             <div class="form-item">
                 <label th:for="state">State</label>
-                <input class="form-control" th:field="${city.state}" />
-                <span th:errors="${city.state}" class="error"></span>
+                <select id="city.state" name="city.state" th:field="*{city.state}" required>
+                    <option value="">Select State</option>
+                    <!-- Options will be populated by JavaScript -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            fetch('/states/states.json')
+                                .then(response => response.json())
+                                .then(states => {
+                                    const selectElement = document.getElementById('city.state');
+                                    states.forEach(state => {
+                                        const option = document.createElement('option');
+                                        option.value = state.abbreviation;
+                                        option.textContent = state.name;
+                                        selectElement.appendChild(option);
+                                    });
+                                })
+                                .catch(error => console.error('Error loading state data:', error));
+                        });
+                    </script>
+                </select>
             </div>
         </div>
+        <div class="error" th:if="${#fields.hasErrors('city.state')}" th:errors="*{city.state}"></div>
         <button type="submit">Add City</button>
     </form>
 </main>
