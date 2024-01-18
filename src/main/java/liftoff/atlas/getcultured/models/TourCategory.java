@@ -1,11 +1,15 @@
 package liftoff.atlas.getcultured.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class TourCategory extends AbstractEntity {
@@ -13,24 +17,20 @@ public class TourCategory extends AbstractEntity {
 
     private String label;
 
-    @OneToMany(mappedBy = "tourCategory")
-    private final List<Tour> tours = new ArrayList<>();
+    @ManyToMany(mappedBy = "category")
+    private Set<Tour> tours = new HashSet<>();
 
-    public TourCategory(@Size(min = 3, message = "Name must be at least 3 characters long") String label){
+    @Column(name = "description")
+    private String description;
+
+    public TourCategory() {
+    }
+
+    public TourCategory(String label, Set<Tour> tours, String description) {
+        super();
         this.label = label;
-    }
-
-    public TourCategory(){
-    }
-
-    public List<Tour> getTours() {
-        return tours;
-    }
-
-
-    @Override
-    public String toString() {
-        return getName();
+        this.tours = tours;
+        this.description = description;
     }
 
     public String getLabel() {
@@ -41,4 +41,19 @@ public class TourCategory extends AbstractEntity {
         this.label = label;
     }
 
+    public Set<Tour> getTours() {
+        return tours;
+    }
+
+    public void setTours(Set<Tour> tours) {
+        this.tours = tours;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

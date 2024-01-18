@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Tour Category</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h2>Create Tour Category</h2>
+
+    <!-- Form for creating a new tour category -->
+    <form action="/tourCategories/create" method="post" th:object="${tourCategoryForm}">
+        <!-- Category Name -->
+        <label for="categoryName">Category Name:</label>
+        <input type="text" id="categoryName" name="categoryName" th:field="*{name}" required>
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" th:field="*{description}" required>
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{description}"></div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="save-button">Save Category</button>
+    </form>
+
+    <!-- Back to Tour Category List link -->
+    <p><a href="/tourCategories" class="back-to-category-list">Back to Category List</a></p>
+</div>
+
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="https://www.thymeleaf.org/">-->
+<!--<head th:replace="~{fragments :: head}"></head>-->
+<!--<body>-->
+<!--<header th:replace="~{fragments :: page-header}"></header>-->
+<!--<div id="admin-bar">-->
+<!--    <div class="nav">-->
+<!--        <a class="navlink" href="/tourCategories">View All Categories</a>-->
+<!--        <a class="navlink" href="/tourCategories/delete">Delete A Category</a>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<main>-->
+<!--    <form method="POST">-->
+<!--        <h3>Add a Category for Tours</h3>-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="form-item">-->
+<!--                    <label th:for="name">Category Name</label>-->
+<!--                    <input th:field="${tourCategory.name}" />-->
+<!--                    <p class="error" th:errors="${tourCategory.name}"></p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <button type="submit">Add Category</button>-->
+<!--    </form>-->
+<!--</main>-->
+<!--</body>-->
+<!--</html>-->

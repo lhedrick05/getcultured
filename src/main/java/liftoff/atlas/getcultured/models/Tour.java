@@ -54,23 +54,8 @@ public class Tour extends AbstractEntity {
     private City city;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    @NotNull(message="Category is required")
-    private TourCategory tourCategory;
-
-//    @ManyToMany
-//    private final List<Tag> tags = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "tour_tags",
-            joinColumns = @JoinColumn(name = "tour_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<Tag> tags = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Stop> stops = new ArrayList<>();
+    @JoinColumn(name = "category_id") // The column name in the database.
+    private TourCategory category;
 
     @ManyToMany
     @JoinTable(
@@ -84,7 +69,7 @@ public class Tour extends AbstractEntity {
     }
 
     public Tour(String summaryDescription, Double estimatedLength,
-                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, TourCategory tourCategory, String imagePath, int updateId, List<Tag> tags) {
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId, TourCategory tourCategory) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -93,10 +78,8 @@ public class Tour extends AbstractEntity {
         this.author = author;
         this.location = location;
         this.city = city;
-        this.tourCategory = tourCategory;
         this.imagePath = imagePath;
         this.updateId = updateId;
-        this.tags = tags;
     }
 
     public void setUpdateId(int updateId) {
@@ -159,22 +142,6 @@ public class Tour extends AbstractEntity {
         this.city = city;
     }
 
-    public TourCategory getTourCategory() {
-        return tourCategory;
-    }
-
-    public void setTourCategory(TourCategory tourCategory) {
-        this.tourCategory = tourCategory;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
     public String getImagePath() {
         return imagePath;
     }
@@ -218,5 +185,13 @@ public class Tour extends AbstractEntity {
 
     public void setStops(List<Stop> stops) {
         this.stops = stops;
+    }
+
+    public TourCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(TourCategory category) {
+        this.category = category;
     }
 }

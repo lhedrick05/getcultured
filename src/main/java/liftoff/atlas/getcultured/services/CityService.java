@@ -19,17 +19,17 @@ public class CityService {
 
     private final CityRepository cityRepository;
 
-    private final TourCategoryRepository tourCategoryRepository;
+//    private final TourCategoryRepository tourCategoryRepository;
 
     private final TagRepository tagRepository;
 
     private final StopService stopService;
 
-    public CityService(TourRepository tourRepository, StopRepository stopRepository, CityRepository cityRepository, TourCategoryRepository tourCategoryRepository, TagRepository tagRepository, StopService stopService) {
+    public CityService(TourRepository tourRepository, StopRepository stopRepository, CityRepository cityRepository, TagRepository tagRepository, StopService stopService) {
         this.tourRepository = tourRepository;
         this.stopRepository = stopRepository;
         this.cityRepository = cityRepository;
-        this.tourCategoryRepository = tourCategoryRepository;
+//        this.tourCategoryRepository = tourCategoryRepository;
         this.tagRepository = tagRepository;
         this.stopService = stopService;
     }

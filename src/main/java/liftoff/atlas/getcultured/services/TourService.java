@@ -3,10 +3,12 @@ package liftoff.atlas.getcultured.services;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import liftoff.atlas.getcultured.dto.StopForm;
-import liftoff.atlas.getcultured.dto.TagForm;
 import liftoff.atlas.getcultured.dto.TourForm;
-import liftoff.atlas.getcultured.models.*;
-import liftoff.atlas.getcultured.models.data.*;
+import liftoff.atlas.getcultured.models.Stop;
+import liftoff.atlas.getcultured.models.Tour;
+import liftoff.atlas.getcultured.models.TourCategory;
+import liftoff.atlas.getcultured.models.data.StopRepository;
+import liftoff.atlas.getcultured.models.data.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
@@ -29,22 +31,13 @@ public class TourService {
 
     private final StopRepository stopRepository;
 
-    private final CityRepository cityRepository;
-
-    private final TourCategoryRepository tourCategoryRepository;
-
-    private final TagRepository tagRepository;
-
     private final StopService stopService;
     private final Path rootLocation; // Image storage location
 
     @Autowired
-    public TourService(TourRepository tourRepository, StopRepository stopRepository, CityRepository cityRepository, TourCategoryRepository tourCategoryRepository, TagRepository tagRepository, StopService stopService) {
+    public TourService(TourRepository tourRepository, StopRepository stopRepository, StopService stopService) {
         this.tourRepository = tourRepository;
         this.stopRepository = stopRepository;
-        this.cityRepository = cityRepository;
-        this.tourCategoryRepository = tourCategoryRepository;
-        this.tagRepository = tagRepository;
         this.stopService = stopService;
         this.rootLocation = Paths.get("C:/Users/lhedr/LaunchCode/GetCultured/images");
     }
@@ -71,8 +64,15 @@ public class TourService {
 
     @Transactional
     public void deleteTour(int tourId) {
-        tourRepository.deleteById(tourId);
+        Optional<Tour> tourOptional = tourRepository.findById(tourId);
+        if (tourOptional.isPresent()) {
+            tourRepository.deleteById(tourId);
+        } else {
+            // Handle the case where the Tour is not found, e.g., log a message
+            logger.info("Tour with id {} not found, nothing to delete.", tourId);
+        }
     }
+
 
     public String storeImage(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
@@ -95,68 +95,14 @@ public class TourService {
         // Set basic properties from the form
         setBasicTourPropertiesFromForm(tour, tourForm);
 
-//        // Set city
-//        City city = cityRepository.findById(tourForm.getCity().getId())
-//                .orElseThrow(() -> new EntityNotFoundException("City not found with ID: " + tourForm.getCity().getId()));
-//        tour.setCity(city);
-//
-//        // Set category
-//        TourCategory category = tourCategoryRepository.findById(tourForm.getTourCategory().getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + tourForm.getTourCategory().getId()));
-//        tour.setTourCategory(category);
-
-        // Set tags
-//        List<Tag> tags = (List<Tag>) tagRepository.findAllById(tourForm.getTags());
-//        tour.setTags(tags);
-
-//        Optional<List<Tag>> resultE = Optional.of((List<Tag>) tagRepository.findAllById(tourForm.getTagIds())); //the-right-repo
-//        if (resultE.isPresent()) {
-//            System.out.println("Object populated properly");
-//            List<Tag> tag = resultE.get();
-//            System.out.println("Object populated properly");
-//            // do stuff
-//            // add tag.save here
-//        } else {
-//            System.out.println("No object found");
-//        }
-
         // Handle image upload
         handleTourImageUpload(tour, imageFile);
 
         // Handling stops
         updateStopsForTour(tour, tourForm.getStops());
 
-//        tour.setCity(tourForm.getTour().getCity());
-
-
         return tourRepository.save(tour);
     }
-
-//    public Tour createTourFromForm(TourForm tourForm, MultipartFile imageFile) throws IOException {
-//        Tour tour = new Tour();
-//        // Set basic properties from the form
-//        setBasicTourPropertiesFromForm(tour, tourForm);
-//
-//        // Set city
-//        City city = cityRepository.findById(tourForm.getCity().getId())
-//                .orElseThrow(() -> new EntityNotFoundException("City not found with ID: " + tourForm.getCity().getId()));
-//        tour.setCity(city);
-//
-//        // Set category
-//        TourCategory category = tourCategoryRepository.findById(tourForm.getTourCategory().getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + tourForm.getTourCategory().getId()));
-//        tour.setTourCategory(category);
-//
-////        // Set tag
-////        Tag tag = tourCategoryRepository.findById(tourForm.getTag().getId())
-////                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + tourForm.getTag().getId()));
-////        tour.setTourCategory(category);
-////        tour.setTag(tag);
-//
-//        // Set image and stops as before
-//
-//        return tourRepository.save(tour);
-//    }
 
     // Helper method to set basic tour properties from the form
     private void setBasicTourPropertiesFromForm(Tour tour, TourForm tourForm) {
@@ -185,13 +131,6 @@ public class TourService {
             tour.addStop(stop);
         }
     }
-
-    // Helper method to update stops for a tour
-//    private void updateTagsForTour(Tour tour, List<Tag> tags) {
-//        for (Tag tag : tags) {
-//            tour.addStop(tag);
-//        }
-//    }
 
     // Update functionality for stops
 //    private void updateExistingStop(Stop existingStop, Stop newStop) {
@@ -314,4 +253,3 @@ public class TourService {
     }
 
 }
-

@@ -20,18 +20,15 @@ public class TagService {
 
     private final CityRepository cityRepository;
 
-    private final TourCategoryRepository tourCategoryRepository;
-
     private final TagRepository tagRepository;
 
     private final StopService stopService;
 
     @Autowired
-    public TagService(TourRepository tourRepository, StopRepository stopRepository, CityRepository cityRepository, TourCategoryRepository tourCategoryRepository, TagRepository tagRepository, StopService stopService) {
+    public TagService(TourRepository tourRepository, StopRepository stopRepository, CityRepository cityRepository, TagRepository tagRepository, StopService stopService) {
         this.tourRepository = tourRepository;
         this.stopRepository = stopRepository;
         this.cityRepository = cityRepository;
-        this.tourCategoryRepository = tourCategoryRepository;
         this.tagRepository = tagRepository;
         this.stopService = stopService;
     }

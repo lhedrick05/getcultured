@@ -10,17 +10,21 @@
     </div>
 </div>
 <main>
-    <h2>Tour Categories</h2>
-    <table class="table table striped">
-        <thead>
-        <tr>
-            <th>Category Name</th>
-        </tr>
-        <tr th:each="category : ${categories}">
-            <td th:text="${category.name}"></td>
-        </tr>
-        </thead>
-    </table>
+    <tbody>
+    <tr th:each="tourCategory : ${tourCategories}">
+        <td th:text="${tourCategory.name}">Category Name</td>
+        <!-- ... other category details ... -->
+        <td>
+            <!-- Link to view the category -->
+            <a th:href="@{'/tourCategories/' + ${tourCategory.id}}" class="button">View</a>
+        </td>
+    </tr>
+    </tbody>
+    <!-- ... -->
+    <!-- Link back to the homepage -->
+    <div class="container">
+        <a href="/" class="button">Back to Homepage</a>
+    </div>
 </main>
 </body>
 </html>

@@ -11,7 +11,7 @@
     <h2>Create Tour</h2>
 
     <!-- Form for creating a new tour with multiple stops -->
-    <form action="@{/tours/create}" method="post" th:object="${tourForm}" enctype="multipart/form-data">
+    <form action="/tours/create" method="post" th:object="${tourForm}" enctype="multipart/form-data">
 
         <!-- Stops Section -->
         <div id="stopsSection">
@@ -47,46 +47,47 @@
         <label for="estimatedLength">Estimated Length:</label>
         <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
 
-<!--        &lt;!&ndash; Add City &ndash;&gt;-->
-<!--        <div class="form-item col-2">-->
-<!--            <label th:for="cityId">City</label>-->
-<!--            <select name="cityId">-->
-<!--                <option th:each="city : ${cities}"-->
-<!--                        th:text="${city.name}"-->
-<!--                        th:value="${city.id}"></option>-->
-<!--            </select>-->
-<!--            <a th:href="@{'/city/add'}">Add City</a>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; Add Category &ndash;&gt;-->
-<!--        <div class="form-item col-2">-->
-<!--            <label th:for="tourCategoryId">Category</label>-->
-<!--            <select name="tourCategoryId">-->
-<!--                <option th:each="tourCategory : ${tourCategories}"-->
-<!--                        th:value="${tourCategory.id}"-->
-<!--                        th:text="${tourCategory.name}"-->
-<!--                ></option>-->
-<!--            </select>-->
-<!--            <a th:href="@{'/tourCategories/add'}">Add Category</a>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; Add Tags &ndash;&gt;-->
-<!--        <div class="form-item col-2">-->
-<!--            <label th:for="tag">Tags</label>-->
-<!--            <select name="tagId">-->
-<!--                <option th:each="tag : ${tags}"-->
-<!--                        th:text="${tag.name}"-->
-<!--                        th:value="${tag.id}"></option>-->
-<!--            </select>-->
-<!--            <a th:href="@{'/tags/add'}">Add Tag</a>-->
-<!--        </div>-->
-
         <!-- Image Upload -->
         <label for="image">Tour Image:</label>
         <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">
 
         <!-- Image Preview for Tour -->
         <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
+
+        <select id="category" name="categoryId" th:field="*{categoryId}" required>
+            <option value="">--Select a Category--</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+
+
+        <!--        &lt;!&ndash; Category Selection &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--            <label for="category">Category:</label>-->
+<!--            <select id="category" name="category" th:field="*{category}" required>-->
+<!--                <option value="">&#45;&#45;Select a Category&#45;&#45;</option>-->
+<!--                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>-->
+<!--            </select>-->
+<!--            <div class="error" th:errors="*{category}"></div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Tags Selection &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--            <label for="tags">Tags:</label>-->
+<!--            <select id="tags" name="tags" multiple th:field="*{tags}">-->
+<!--                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>-->
+<!--            </select>-->
+<!--            <div class="error" th:errors="*{tags}"></div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; City Selection &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--            <label for="city">City:</label>-->
+<!--            <select id="city" name="city" th:field="*{city}" required>-->
+<!--                <option value="">&#45;&#45;Select a City&#45;&#45;</option>-->
+<!--                <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>-->
+<!--            </select>-->
+<!--            <div class="error" th:errors="*{city}"></div>-->
+<!--        </div>-->
 
         <div class="button-container">
             <!-- Submit (Save Tour) Button -->
