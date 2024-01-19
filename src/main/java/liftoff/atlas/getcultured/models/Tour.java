@@ -54,7 +54,7 @@ public class Tour extends AbstractEntity {
     private City city;
 
     @ManyToOne
-    @JoinColumn(name = "category_id") // The column name in the database.
+    @JoinColumn(name = "category") // The column name in the database.
     private TourCategory category;
 
     @ManyToMany

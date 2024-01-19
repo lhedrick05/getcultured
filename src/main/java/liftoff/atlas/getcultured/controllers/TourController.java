@@ -79,7 +79,7 @@ public class TourController {
             model.addAttribute("tourForm", new TourForm());
         }
 
-        model.addAttribute("categories", tourCategoryService.getAllTourCategories());
+        model.addAttribute("category", tourCategoryService.getAllTourCategories());
         // Fetch all stops
         List<Stop> stops = stopService.findAll();
         model.addAttribute("stops", stops);
@@ -123,7 +123,7 @@ public class TourController {
                 } else {
                     // Optionally handle the case where the category is not found
                     logger.error("Category with id {} not found", tourForm.getCategoryId());
-                    // You might want to throw an exception or handle this case accordingly
+                    // Throw an exception or handle this case accordingly
                 }
             }
 
@@ -159,7 +159,10 @@ public class TourController {
     public String viewTour(@PathVariable int tourId, Model model) {
         Tour tour = tourService.getTourById(tourId);
         if (tour != null) {
+            TourCategory category = tourCategoryService.getTourCategoryById(tour.getId());
+            tour.setCategory(category);
             model.addAttribute("tour", tour);
+//            model.addAttribute("tour", tour);
             return "tours/view"; // This should be the name of your Thymeleaf template for viewing a tour
         } else {
             // Handle the case where the tour with the given ID does not exist

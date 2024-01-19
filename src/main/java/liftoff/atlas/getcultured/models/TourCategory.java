@@ -17,7 +17,7 @@ public class TourCategory extends AbstractEntity {
 
     private String label;
 
-    @ManyToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category")
     private Set<Tour> tours = new HashSet<>();
 
     @Column(name = "description")
