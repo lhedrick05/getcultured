@@ -59,16 +59,10 @@
             <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
         </select>
 
-
-        <!--        &lt;!&ndash; Category Selection &ndash;&gt;-->
-<!--        <div class="form-group">-->
-<!--            <label for="category">Category:</label>-->
-<!--            <select id="category" name="category" th:field="*{category}" required>-->
-<!--                <option value="">&#45;&#45;Select a Category&#45;&#45;</option>-->
-<!--                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>-->
-<!--            </select>-->
-<!--            <div class="error" th:errors="*{category}"></div>-->
-<!--        </div>-->
+        <select id="city" name="cityId" th:field="*{cityId}" required>
+            <option value="">--Select a City--</option>
+            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+        </select>
 
 <!--        &lt;!&ndash; Tags Selection &ndash;&gt;-->
 <!--        <div class="form-group">-->
@@ -77,16 +71,6 @@
 <!--                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>-->
 <!--            </select>-->
 <!--            <div class="error" th:errors="*{tags}"></div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; City Selection &ndash;&gt;-->
-<!--        <div class="form-group">-->
-<!--            <label for="city">City:</label>-->
-<!--            <select id="city" name="city" th:field="*{city}" required>-->
-<!--                <option value="">&#45;&#45;Select a City&#45;&#45;</option>-->
-<!--                <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>-->
-<!--            </select>-->
-<!--            <div class="error" th:errors="*{city}"></div>-->
 <!--        </div>-->
 
         <div class="button-container">

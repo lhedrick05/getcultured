@@ -80,25 +80,25 @@ public class TourCategoryService {
         tourCategoryRepository.deleteById(tourCategoryId);
     }
 
-    @Transactional
-    public void deleteTour(int tourId) {
-        Optional<Tour> tourOptional = tourRepository.findById(tourId);
-        if (tourOptional.isPresent()) {
-            Tour tour = tourOptional.get();
-
-            // If the relationship is bidirectional, you may want to remove the tour from the category's tours
-            // However, this is not necessary for a unidirectional many-to-one relationship from Tour to TourCategory
-            // TourCategory category = tour.getCategory();
-            // if (category != null) {
-            //     category.getTours().remove(tour); // Only if you maintain a list of tours in TourCategory
-            // }
-
-            tourRepository.deleteById(tourId);
-        } else {
-            // Handle the case where the Tour is not found, e.g., log a message
-            logger.info("Tour with id {} not found, nothing to delete.", tourId);
-        }
-    }
+//    @Transactional
+//    public void deleteTour(int tourId) {
+//        Optional<Tour> tourOptional = tourRepository.findById(tourId);
+//        if (tourOptional.isPresent()) {
+//            Tour tour = tourOptional.get();
+//
+//            // If the relationship is bidirectional, you may want to remove the tour from the category's tours
+//            // However, this is not necessary for a unidirectional many-to-one relationship from Tour to TourCategory
+//            // TourCategory category = tour.getCategory();
+//            // if (category != null) {
+//            //     category.getTours().remove(tour); // Only if you maintain a list of tours in TourCategory
+//            // }
+//
+//            tourRepository.deleteById(tourId);
+//        } else {
+//            // Handle the case where the Tour is not found, e.g., log a message
+//            logger.info("Tour with id {} not found, nothing to delete.", tourId);
+//        }
+//    }
 
 
 

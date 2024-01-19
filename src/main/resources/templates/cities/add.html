@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Tour Category</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h2>Add City</h2>
+
+    <!-- Form for creating a new tour category -->
+    <form action="/cities/add" method="post" th:object="${cityForm}">
+        <!-- Category Name -->
+        <label for="cityName">City Name:</label>
+        <input type="text" id="cityName" name="cityName" th:field="*{name}" required>
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
+        <label th:for="state">State</label>
+                        <select id="state" name="state" th:field="*{state}" required>
+                            <option value="">Select State</option>
+                            <!-- Options will be populated by JavaScript -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    fetch('/states/states.json')
+                                        .then(response => response.json())
+                                        .then(states => {
+                                            const selectElement = document.getElementById('state');
+                                            states.forEach(state => {
+                                                const option = document.createElement('option');
+                                                option.value = state.abbreviation;
+                                                option.textContent = state.name;
+                                                selectElement.appendChild(option);
+                                            });
+                                        })
+                                        .catch(error => console.error('Error loading state data:', error));
+                                });
+                            </script>
+                        </select>
+
+        <!-- Submit Button -->
+        <button type="submit" class="save-button">Save City</button>
+    </form>
+
+    <!-- Back to Tour Category List link -->
+    <p><a href="/cities" class="back-to-city-list">Back to City List</a></p>
+</div>
+
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="https://www.thymeleaf.org/">-->
+<!--<head th:replace="~{fragments :: head}"></head>-->
+<!--<body>-->
+<!--<header th:replace="~{fragments :: page-header}"></header>-->
+<!--<div id="admin-bar">-->
+<!--    <div class="nav">-->
+<!--        <a class="navlink" href="/cities">All Cities</a>-->
+<!--        <span class="faux-link">Search</span>-->
+<!--        <a class="navlink" href="/cities/delete">Delete A City</a>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<main>-->
+<!--    <form method="POST" style="max-width:600px;">-->
+<!--        <h3>Add a City</h3>-->
+<!--        <div class="container">-->
+<!--            <div class="form-item">-->
+<!--                <label th:for="cityName">City</label>-->
+<!--                <input class="form-control" th:field="${name}" />-->
+<!--                <span th:errors="${name}" class="error"></span>-->
+<!--            </div>-->
+<!--            <div class="form-item">-->
+<!--                <label th:for="state">State</label>-->
+<!--                <select id="city.state" name="city.state" th:field="*{city.state}" required>-->
+<!--                    <option value="">Select State</option>-->
+<!--                    &lt;!&ndash; Options will be populated by JavaScript &ndash;&gt;-->
+<!--                    <script>-->
+<!--                        document.addEventListener('DOMContentLoaded', function() {-->
+<!--                            fetch('/states/states.json')-->
+<!--                                .then(response => response.json())-->
+<!--                                .then(states => {-->
+<!--                                    const selectElement = document.getElementById('city.state');-->
+<!--                                    states.forEach(state => {-->
+<!--                                        const option = document.createElement('option');-->
+<!--                                        option.value = state.abbreviation;-->
+<!--                                        option.textContent = state.name;-->
+<!--                                        selectElement.appendChild(option);-->
+<!--                                    });-->
+<!--                                })-->
+<!--                                .catch(error => console.error('Error loading state data:', error));-->
+<!--                        });-->
+<!--                    </script>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="error" th:if="${#fields.hasErrors('city.state')}" th:errors="*{city.state}"></div>-->
+<!--        <button type="submit">Add City</button>-->
+<!--    </form>-->
+<!--</main>-->
+<!--</body>-->
+<!--</html>-->

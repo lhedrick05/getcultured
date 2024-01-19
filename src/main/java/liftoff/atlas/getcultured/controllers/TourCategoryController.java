@@ -1,7 +1,6 @@
 package liftoff.atlas.getcultured.controllers;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.dto.TourCategoryForm;
 import liftoff.atlas.getcultured.models.TourCategory;
 import liftoff.atlas.getcultured.services.TourCategoryService;
@@ -16,7 +15,6 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Controller
 @RequestMapping("/tourCategories")

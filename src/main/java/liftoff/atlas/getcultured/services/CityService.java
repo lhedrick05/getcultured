@@ -1,6 +1,10 @@
 package liftoff.atlas.getcultured.services;
 
+import jakarta.transaction.Transactional;
+import liftoff.atlas.getcultured.dto.CityForm;
+import liftoff.atlas.getcultured.dto.TourCategoryForm;
 import liftoff.atlas.getcultured.models.City;
+import liftoff.atlas.getcultured.models.TourCategory;
 import liftoff.atlas.getcultured.models.data.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +23,6 @@ public class CityService {
 
     private final CityRepository cityRepository;
 
-//    private final TourCategoryRepository tourCategoryRepository;
 
     private final TagRepository tagRepository;
 
@@ -29,7 +32,6 @@ public class CityService {
         this.tourRepository = tourRepository;
         this.stopRepository = stopRepository;
         this.cityRepository = cityRepository;
-//        this.tourCategoryRepository = tourCategoryRepository;
         this.tagRepository = tagRepository;
         this.stopService = stopService;
     }
@@ -38,7 +40,42 @@ public class CityService {
         return (List<City>) cityRepository.findAll();
     }
 
-    public Optional<City> getCity(int cityId) {
-        return cityRepository.findById(cityId);
+    public City getCityById(int tourId) {
+        return cityRepository.findById(tourId).orElse(null);
+    }
+
+    @Transactional
+    public void saveCity(City city) {
+        cityRepository.save(city);
+    }
+
+    // Create or update a City from a CityForm
+    public Optional<City> createCityFromForm(CityForm cityForm) {
+        Optional<City> cityOptional;
+        if (cityForm.getId() != 0) {
+            cityOptional = cityRepository.findById(cityForm.getId());
+            if(cityOptional.isPresent()) {
+                City city = cityOptional.get();
+                // Update the properties of the tourCategory from the form
+                city.setName(cityForm.getName());
+                city.setState(cityForm.getState());
+                // Add other fields from the form as needed
+                cityRepository.save(city);
+            }
+        } else {
+            City city = new City();
+            // Set properties from the form
+            city.setName(cityForm.getName());
+            city.setState(cityForm.getState());
+            // Add other fields from the form as needed
+            cityRepository.save(city);
+            cityOptional = Optional.of(city);
+        }
+        return cityOptional;
+    }
+
+    @Transactional
+    public void deleteCity(int cityId) {
+        cityRepository.deleteById(cityId);
     }
 }

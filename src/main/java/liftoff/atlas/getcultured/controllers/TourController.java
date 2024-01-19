@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
+import liftoff.atlas.getcultured.models.City;
 import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.Tour;
 import liftoff.atlas.getcultured.models.TourCategory;
+import liftoff.atlas.getcultured.services.CityService;
 import liftoff.atlas.getcultured.services.StopService;
 import liftoff.atlas.getcultured.services.TourCategoryService;
 import liftoff.atlas.getcultured.services.TourService;
@@ -51,16 +53,20 @@ public class TourController {
     @Autowired
     private final TourCategoryService tourCategoryService;
 
+    @Autowired
+    private final CityService cityService;
+
     @ModelAttribute("tourForm")
     public TourForm getTourForm() {
         return new TourForm(); // This ensures a new form is created if not present in the session
     }
 
     @Autowired
-    public TourController(TourService tourService, StopService stopService, TourCategoryService tourCategoryService) {
+    public TourController(TourService tourService, StopService stopService, TourCategoryService tourCategoryService, CityService cityService) {
         this.tourService = tourService;
         this.stopService = stopService;
         this.tourCategoryService = tourCategoryService;
+        this.cityService = cityService;
     }
 
     @GetMapping("/index")
@@ -79,7 +85,8 @@ public class TourController {
             model.addAttribute("tourForm", new TourForm());
         }
 
-        model.addAttribute("category", tourCategoryService.getAllTourCategories());
+        model.addAttribute("categories", tourCategoryService.getAllTourCategories());
+        model.addAttribute("cities", cityService.getAllCities());
         // Fetch all stops
         List<Stop> stops = stopService.findAll();
         model.addAttribute("stops", stops);
@@ -127,6 +134,18 @@ public class TourController {
                 }
             }
 
+            // Handle city
+            if (tourForm.getCityId() != null) {
+                Optional<City> cityOptional = Optional.ofNullable(cityService.getCityById(tourForm.getCityId()));
+                if (cityOptional.isPresent()) {
+                    tour.setCity(cityOptional.get()); // Set the city
+                } else {
+                    // Optionally handle the case where the category is not found
+                    logger.error("City with id {} not found", tourForm.getCityId());
+                    // Throw an exception or handle this case accordingly
+                }
+            }
+
             redirectAttributes.addFlashAttribute("successMessage", "Tour created successfully!");
             sessionStatus.setComplete(); // Mark the session as complete
             return "redirect:/tours/view/" + tour.getId(); // Redirect to view the created tour
@@ -161,6 +180,8 @@ public class TourController {
         if (tour != null) {
             TourCategory category = tourCategoryService.getTourCategoryById(tour.getId());
             tour.setCategory(category);
+            City city = cityService.getCityById(tour.getId());
+            tour.setCity(city);
             model.addAttribute("tour", tour);
 //            model.addAttribute("tour", tour);
             return "tours/view"; // This should be the name of your Thymeleaf template for viewing a tour

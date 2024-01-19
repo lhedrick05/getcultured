@@ -26,6 +26,8 @@ public class TourForm {
 
     private Integer categoryId;
 
+    private Integer cityId;
+
     public TourForm() {
         this.tour = new Tour();
         this.stops = new ArrayList<>();
@@ -35,6 +37,14 @@ public class TourForm {
 
     // Getters and setters
 
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
 
     public Integer getCategoryId() {
         return categoryId;
