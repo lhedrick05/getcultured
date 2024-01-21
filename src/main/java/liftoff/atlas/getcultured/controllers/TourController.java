@@ -1,5 +1,8 @@
 package liftoff.atlas.getcultured.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.dto.StopForm;
@@ -70,10 +73,13 @@ public class TourController {
     }
 
     @GetMapping("/index")
-    public String index (Model model){
-        List<Tour> tour = (List<Tour>) tourService.getAllTours();
-        model.addAttribute("tours", tour); // Make sure this is the correct value
-        model.addAttribute("title", "All Tours");
+    public String index (Model model, SessionStatus sessionStatus){
+        if (model.containsAttribute("tourForm")) {
+            sessionStatus.setComplete();
+            List<Tour> tour = (List<Tour>) tourService.getAllTours();
+            model.addAttribute("tours", tour); // Make sure this is the correct value
+            model.addAttribute("title", "All Tours");
+        }
         return "tours/index";
     }
 
@@ -167,7 +173,8 @@ public class TourController {
 
     // Mapping for listing all tours
     @GetMapping
-    public String listTours(Model model) {
+    public String listTours(Model model, SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
         List<Tour> tours = tourService.getAllTours();
         model.addAttribute("tours", tours);
         return "tours/tours";
@@ -482,6 +489,68 @@ public class TourController {
                     .body("Error removing stop: " + e.getMessage());
         }
     }
+
+    @PostMapping("/updateForm")
+    public ResponseEntity<?> updateTourForm(@RequestBody String formDataJson,
+                                            BindingResult result,
+                                            HttpSession session) {
+        if (result.hasErrors()) {
+            // If there are validation errors, return a bad request response.
+            return ResponseEntity.badRequest().body("Invalid form data");
+        }
+
+        try {
+            // Parse the JSON data received from the request
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode formData = objectMapper.readTree(formDataJson);
+
+            // Retrieve the tourForm from the session
+            TourForm tourForm = (TourForm) session.getAttribute("tourForm");
+            if (tourForm == null) {
+                // If tourForm doesn't exist in the session, create a new one
+                tourForm = new TourForm();
+                session.setAttribute("tourForm", tourForm);
+            }
+
+            // Update the tourForm object with the new data
+            if (formData.has("tourName")) {
+                tourForm.setName(formData.get("tourName").asText());
+            }
+            if (formData.has("summaryDescription")) {
+                tourForm.setSummaryDescription(formData.get("summaryDescription").asText());
+            }
+            if (formData.has("estimatedLength") && formData.get("estimatedLength").isNumber()) {
+                // Parse the estimatedLength as double
+                tourForm.setEstimatedLength(formData.get("estimatedLength").asDouble());
+            }
+            // Handle category ID
+            if (formData.has("categoryId") && formData.get("categoryId").canConvertToInt()) {
+                int categoryId = formData.get("categoryId").asInt();
+                // Optional: Validate the category ID (e.g., check if such a category exists)
+                tourForm.setCategoryId(categoryId);
+            }
+
+            // Handle city ID
+            if (formData.has("cityId") && formData.get("cityId").canConvertToInt()) {
+                int cityId = formData.get("cityId").asInt();
+                // Optional: Validate the city ID (e.g., check if such a city exists)
+                tourForm.setCityId(cityId);
+            }
+
+            // ... handle other fields similarly
+
+            // Save the updated tourForm back to the session
+            session.setAttribute("tourForm", tourForm);
+
+            // Return a success response
+            return ResponseEntity.ok().body("Form data saved successfully");
+        } catch (JsonProcessingException e) {
+            // Handle JSON parsing errors
+            return ResponseEntity.badRequest().body("Invalid form data format");
+        }
+    }
+
+
 
 }
 

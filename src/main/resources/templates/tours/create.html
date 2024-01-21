@@ -13,6 +13,65 @@
     <!-- Form for creating a new tour with multiple stops -->
     <form action="/tours/create" method="post" th:object="${tourForm}" enctype="multipart/form-data">
 
+        <!-- Tour Name -->
+        <label for="tourName">Tour Name:</label>
+        <input type="text" id="tourName" name="tourName" th:field="*{name}" required oninput="throttle(saveFormData, 2000)()">
+        <div class="error" th:errors="*{name}"></div>
+
+        <!-- Summary Description -->
+        <label for="summaryDescription">Description:</label>
+        <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required oninput="throttle(saveFormData, 2000)()"></textarea>
+
+        <!-- Estimated Length -->
+        <label for="estimatedLength">Estimated Length:</label>
+        <input type="number" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required oninput="throttle(saveFormData, 2000)()">
+
+
+        <!-- Image Upload -->
+        <label for="image">Tour Image:</label>
+        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">
+
+        <!-- Image Preview for Tour -->
+        <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
+
+        <select id="category" name="categoryId" th:field="*{categoryId}" required>
+            <option value="">--Select a Category--</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:selected="${tourForm.categoryId != null && category.id.equals(tourForm.categoryId)}"
+                    th:text="${category.name}">
+            </option>
+        </select>
+
+        <select id="city" name="cityId" th:field="*{cityId}" required>
+            <option value="">--Select a City--</option>
+            <option th:each="city : ${cities}"
+                    th:value="${city.id}"
+                    th:selected="${tourForm.cityId != null && city.id.equals(tourForm.cityId)}"
+                    th:text="${city.name}">
+            </option>
+        </select>
+
+
+        <!--        <select id="category" name="categoryId" th:field="*{categoryId}" required onchange="throttle(saveFormData, 2000)()">-->
+<!--            <option value="">&#45;&#45;Select a Category&#45;&#45;</option>-->
+<!--            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>-->
+<!--        </select>-->
+
+<!--        <select id="city" name="cityId" th:field="*{cityId}" required onchange="throttle(saveFormData, 2000)()">-->
+<!--            <option value="">&#45;&#45;Select a City&#45;&#45;</option>-->
+<!--            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>-->
+<!--        </select>-->
+
+<!--        &lt;!&ndash; Tags Selection &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--            <label for="tags">Tags:</label>-->
+<!--            <select id="tags" name="tags" multiple th:field="*{tags}">-->
+<!--                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>-->
+<!--            </select>-->
+<!--            <div class="error" th:errors="*{tags}"></div>-->
+<!--        </div>-->
+
         <!-- Stops Section -->
         <div id="stopsSection">
             <!-- Dynamic Fields for Each Stop -->
@@ -33,45 +92,6 @@
         <div class="button-container">
             <a th:href="@{/tours/create/selectStop(context='create')}" class="add-stop-button">Select Stop</a>
         </div>
-
-        <!-- Tour Name -->
-        <label for="tourName">Tour Name:</label>
-        <input type="text" id="tourName" name="tourName" th:field="*{name}" required>
-        <div class="error" th:errors="*{name}"></div>
-
-        <!-- Summary Description -->
-        <label for="summaryDescription">Description:</label>
-        <textarea id="summaryDescription" name="summaryDescription" th:field="*{summaryDescription}" required></textarea>
-
-        <!-- Estimated Length -->
-        <label for="estimatedLength">Estimated Length:</label>
-        <input type="text" id="estimatedLength" name="estimatedLength" th:field="*{estimatedLength}" required>
-
-        <!-- Image Upload -->
-        <label for="image">Tour Image:</label>
-        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="previewTourImage(this)">
-
-        <!-- Image Preview for Tour -->
-        <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
-
-        <select id="category" name="categoryId" th:field="*{categoryId}" required>
-            <option value="">--Select a Category--</option>
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-        </select>
-
-        <select id="city" name="cityId" th:field="*{cityId}" required>
-            <option value="">--Select a City--</option>
-            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
-        </select>
-
-<!--        &lt;!&ndash; Tags Selection &ndash;&gt;-->
-<!--        <div class="form-group">-->
-<!--            <label for="tags">Tags:</label>-->
-<!--            <select id="tags" name="tags" multiple th:field="*{tags}">-->
-<!--                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>-->
-<!--            </select>-->
-<!--            <div class="error" th:errors="*{tags}"></div>-->
-<!--        </div>-->
 
         <div class="button-container">
             <!-- Submit (Save Tour) Button -->
@@ -193,30 +213,101 @@ function updateStopIndices() {
         // Handle adding existing stop to the tour (possibly via AJAX or form submission)
     }
 
-    function updateTourFormAndSelectStop() {
-        let formData = {
-            'name': $('#tourName').val(),
-            'summaryDescription': $('#summaryDescription').val(),
-            'estimatedLength': $('#estimatedLength').val(),
-            // Include other fields as necessary
+<!--    function updateTourFormAndSelectStop() {-->
+<!--        let formData = {-->
+<!--            'name': $('#tourName').val(),-->
+<!--            'summaryDescription': $('#summaryDescription').val(),-->
+<!--            'estimatedLength': $('#estimatedLength').val(),-->
+<!--            // Include other fields as necessary-->
+<!--        };-->
+
+<!--        fetch('/tours/create/updateForm', {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--                // Include CSRF token if necessary-->
+<!--            },-->
+<!--            body: JSON.stringify(formData)-->
+<!--        })-->
+<!--        .then(response => {-->
+<!--            if(response.ok) {-->
+<!--                window.location.href = '/tours/create/selectStop'; // Redirect to stop selection-->
+<!--            } else {-->
+<!--                console.error('Error updating tour form');-->
+<!--            }-->
+<!--        })-->
+<!--        .catch(error => console.error('Error:', error));-->
+<!--    }-->
+
+    function saveFormData() {
+        const formData = {
+            tourName: document.getElementById('tourName').value,
+            summaryDescription: document.getElementById('summaryDescription').value,
+            estimatedLength: parseFloat(document.getElementById('estimatedLength').value) || 0,
+            categoryId: document.getElementById('category').value,
+            cityId: document.getElementById('city').value
+            // ... add other fields as needed
         };
 
-        fetch('/tours/create/updateForm', {
+        fetch('/tours/updateForm', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // Include CSRF token if necessary
             },
             body: JSON.stringify(formData)
         })
-        .then(response => {
-            if(response.ok) {
-                window.location.href = '/tours/create/selectStop'; // Redirect to stop selection
-            } else {
-                console.error('Error updating tour form');
-            }
+        .then(response => response.json())
+        .then(data => {
+            // Handle response (e.g., show a success message)
+            setSelectedOption('category', formData.categoryId);
+            setSelectedOption('city', formData.cityId);
         })
         .catch(error => console.error('Error:', error));
+    }
+
+    // Throttle function to limit the rate of saveFormData calls
+    function throttle(callback, delay) {
+        let last;
+        let timer;
+        return function () {
+            const context = this;
+            const now = +new Date();
+            const args = arguments;
+            if (last && now < last + delay) {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    last = now;
+                    callback.apply(context, args);
+                }, delay);
+            } else {
+                last = now;
+                callback.apply(context, args);
+            }
+        };
+    }
+
+    // Add event listeners to input fields
+    document.getElementById('tourName').addEventListener('input', throttle(saveFormData, 2000)); // Adjust the delay as needed
+    document.getElementById('summaryDescription').addEventListener('input', throttle(saveFormData, 2000));
+    document.getElementById('estimatedLength').addEventListener('input', throttle(saveFormData, 2000));
+<!--    // Event listener for category dropdown-->
+    document.getElementById('category').addEventListener('change', throttle(saveFormData, 2000));
+
+<!--    // Event listener for city dropdown-->
+    document.getElementById('city').addEventListener('change', throttle(saveFormData, 2000));
+
+    // ... add other fields as needed
+
+        function setSelectedOption(selectElementId, value) {
+        let selectElement = document.getElementById(selectElementId);
+        if (selectElement) {
+            for (let option of selectElement.options) {
+                if (option.value === value.toString()) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
     }
 </script>
 
