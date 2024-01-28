@@ -18,9 +18,16 @@
         <p><strong>Category:</strong> <span th:text="${tour.category.name}">Category Name</span></p>
         <p><strong>City:</strong> <span th:text="${tour.city.name}">City </span></p>
         <p><strong>State:</strong> <span th:text="${tour.city.state}">State </span></p>
+        <p><strong>Tag:</strong> <span th:text="${tour.tag.name}">Tag </span></p>
+<!--        <p><strong>Tag Color:</strong> <span th:text="${tour.tag.color}">Tag Color </span></p>-->
+        <td>
+            <p>Tag Color:</p>
+            <!-- Centered color block with dynamic color -->
+            <div th:style="'background-color: ' + ${tour.tag.color} + '; width: 100px; height: 40px; border: 1px solid black; margin-top: 20px;'"></div>
+        </td>
 
 
-        <img th:src="${tour.imagePath != null ? '/' + tour.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Tour Image" class="tour-image"/>
+        <img th:src="${tour.imagePath != null ? '/' + tour.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Tour Image" style="margin-top: 20px;" class="tour-image"/>
 
         <!-- Add more tour properties as needed -->
 

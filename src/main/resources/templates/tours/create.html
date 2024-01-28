@@ -34,44 +34,6 @@
         <!-- Image Preview for Tour -->
         <img id="tourImagePreview" class="image-preview" alt="Tour Image" style="display:none;">
 
-        <select id="category" name="categoryId" th:field="*{categoryId}" required>
-            <option value="">--Select a Category--</option>
-            <option th:each="category : ${categories}"
-                    th:value="${category.id}"
-                    th:selected="${tourForm.categoryId != null && category.id.equals(tourForm.categoryId)}"
-                    th:text="${category.name}">
-            </option>
-        </select>
-
-        <select id="city" name="cityId" th:field="*{cityId}" required>
-            <option value="">--Select a City--</option>
-            <option th:each="city : ${cities}"
-                    th:value="${city.id}"
-                    th:selected="${tourForm.cityId != null && city.id.equals(tourForm.cityId)}"
-                    th:text="${city.name}">
-            </option>
-        </select>
-
-
-        <!--        <select id="category" name="categoryId" th:field="*{categoryId}" required onchange="throttle(saveFormData, 2000)()">-->
-<!--            <option value="">&#45;&#45;Select a Category&#45;&#45;</option>-->
-<!--            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>-->
-<!--        </select>-->
-
-<!--        <select id="city" name="cityId" th:field="*{cityId}" required onchange="throttle(saveFormData, 2000)()">-->
-<!--            <option value="">&#45;&#45;Select a City&#45;&#45;</option>-->
-<!--            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>-->
-<!--        </select>-->
-
-<!--        &lt;!&ndash; Tags Selection &ndash;&gt;-->
-<!--        <div class="form-group">-->
-<!--            <label for="tags">Tags:</label>-->
-<!--            <select id="tags" name="tags" multiple th:field="*{tags}">-->
-<!--                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>-->
-<!--            </select>-->
-<!--            <div class="error" th:errors="*{tags}"></div>-->
-<!--        </div>-->
-
         <!-- Stops Section -->
         <div id="stopsSection">
             <!-- Dynamic Fields for Each Stop -->
@@ -92,6 +54,33 @@
         <div class="button-container">
             <a th:href="@{/tours/create/selectStop(context='create')}" class="add-stop-button">Select Stop</a>
         </div>
+
+        <select id="category" name="categoryId" th:field="*{categoryId}" required style="margin-top: 20px;">
+            <option value="">--Select a Category--</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:selected="${tourForm.categoryId != null && category.id.equals(tourForm.categoryId)}"
+                    th:text="${category.name}">
+            </option>
+        </select>
+
+        <select id="city" name="cityId" th:field="*{cityId}" required style="margin-top: 20px;">
+            <option value="">--Select a City--</option>
+            <option th:each="city : ${cities}"
+                    th:value="${city.id}"
+                    th:selected="${tourForm.cityId != null && city.id.equals(tourForm.cityId)}"
+                    th:text="${city.name}">
+            </option>
+        </select>
+
+        <select id="tag" name="tagId" th:field="*{tagId}" required style="margin-top: 20px;">
+            <option value="">--Select a Tag--</option>
+            <option th:each="tag : ${tags}"
+                    th:value="${tag.id}"
+                    th:selected="${tourForm.tagId != null && tag.id.equals(tourForm.tagId)}"
+                    th:text="${tag.name}">
+            </option>
+        </select>
 
         <div class="button-container">
             <!-- Submit (Save Tour) Button -->

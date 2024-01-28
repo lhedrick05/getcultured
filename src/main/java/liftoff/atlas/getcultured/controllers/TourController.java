@@ -7,14 +7,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
-import liftoff.atlas.getcultured.models.City;
-import liftoff.atlas.getcultured.models.Stop;
-import liftoff.atlas.getcultured.models.Tour;
-import liftoff.atlas.getcultured.models.TourCategory;
-import liftoff.atlas.getcultured.services.CityService;
-import liftoff.atlas.getcultured.services.StopService;
-import liftoff.atlas.getcultured.services.TourCategoryService;
-import liftoff.atlas.getcultured.services.TourService;
+import liftoff.atlas.getcultured.models.*;
+import liftoff.atlas.getcultured.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,17 +53,21 @@ public class TourController {
     @Autowired
     private final CityService cityService;
 
+    @Autowired
+    private final TagService tagService;
+
     @ModelAttribute("tourForm")
     public TourForm getTourForm() {
         return new TourForm(); // This ensures a new form is created if not present in the session
     }
 
     @Autowired
-    public TourController(TourService tourService, StopService stopService, TourCategoryService tourCategoryService, CityService cityService) {
+    public TourController(TourService tourService, StopService stopService, TourCategoryService tourCategoryService, CityService cityService, TagService tagService) {
         this.tourService = tourService;
         this.stopService = stopService;
         this.tourCategoryService = tourCategoryService;
         this.cityService = cityService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/index")
@@ -93,6 +91,7 @@ public class TourController {
 
         model.addAttribute("categories", tourCategoryService.getAllTourCategories());
         model.addAttribute("cities", cityService.getAllCities());
+        model.addAttribute("tags", tagService.getAllTags());
         // Fetch all stops
         List<Stop> stops = stopService.findAll();
         model.addAttribute("stops", stops);
@@ -152,6 +151,18 @@ public class TourController {
                 }
             }
 
+            // Handle tag
+            if (tourForm.getTagId() != null) {
+                Optional<Tag> tagOptional = Optional.ofNullable(tagService.getTagById(tourForm.getCityId()));
+                if (tagOptional.isPresent()) {
+                    tour.setTag(tagOptional.get()); // Set the city
+                } else {
+                    // Optionally handle the case where the tag is not found
+                    logger.error("Tag with id {} not found", tourForm.getTagId());
+                    // Throw an exception or handle this case accordingly
+                }
+            }
+
             redirectAttributes.addFlashAttribute("successMessage", "Tour created successfully!");
             sessionStatus.setComplete(); // Mark the session as complete
             return "redirect:/tours/view/" + tour.getId(); // Redirect to view the created tour
@@ -189,8 +200,9 @@ public class TourController {
             tour.setCategory(category);
             City city = cityService.getCityById(tour.getId());
             tour.setCity(city);
+            Tag tag = tagService.getTagById(tour.getId());
+            tour.setTag(tag);
             model.addAttribute("tour", tour);
-//            model.addAttribute("tour", tour);
             return "tours/view"; // This should be the name of your Thymeleaf template for viewing a tour
         } else {
             // Handle the case where the tour with the given ID does not exist

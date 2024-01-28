@@ -57,6 +57,10 @@ public class Tour extends AbstractEntity {
     @JoinColumn(name = "category") // The column name in the database.
     private TourCategory category;
 
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
+
     @ManyToMany
     @JoinTable(
             name = "tour_stop",
@@ -69,7 +73,7 @@ public class Tour extends AbstractEntity {
     }
 
     public Tour(String summaryDescription, Double estimatedLength,
-                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId, TourCategory tourCategory) {
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId, TourCategory tourCategory, Tag tag) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -80,6 +84,7 @@ public class Tour extends AbstractEntity {
         this.city = city;
         this.imagePath = imagePath;
         this.updateId = updateId;
+        this.tag = tag;
     }
 
     public void setUpdateId(int updateId) {
@@ -193,5 +198,13 @@ public class Tour extends AbstractEntity {
 
     public void setCategory(TourCategory category) {
         this.category = category;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View City</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${tag.name}">Tag Name</h2>
+    <!-- More details can be added here -->
+    <td>
+        <p>Color:</p>
+        <!-- Centered color block with dynamic color -->
+<!--        <div style="display: flex; justify-content: center; align-items: center;">-->
+        <div th:style="'background-color: ' + ${tag.color} + '; width: 100px; height: 40px; border: 1px solid black;'"></div>
+<!--        </div>-->
+    </td>
+
+    <!-- Button to update the city -->
+    <!--    <a th:href="@{'/cities/update/' + ${city.id}}" class="button">Update Category</a>-->
+
+    <!-- Link back to the list of cities -->
+<!--    <a href="/tags" class="button">Back to Tag List</a>-->
+
+    <div style="margin-top: 20px;">
+        <p><a href="/tags" class="button">Back to Tag List</a></p>
+    </div>
+</div>
+</body>
+</html>

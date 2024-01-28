@@ -28,6 +28,8 @@ public class TourForm {
 
     private Integer cityId;
 
+    private Integer tagId;
+
     public TourForm() {
         this.tour = new Tour();
         this.stops = new ArrayList<>();
@@ -37,6 +39,14 @@ public class TourForm {
 
     // Getters and setters
 
+
+    public Integer getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(Integer tagId) {
+        this.tagId = tagId;
+    }
 
     public Integer getCityId() {
         return cityId;

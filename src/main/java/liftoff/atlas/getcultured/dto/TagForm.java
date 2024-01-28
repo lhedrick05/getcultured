@@ -16,11 +16,7 @@ public class TagForm {
     // Default constructor, getters, and setters
 
 
-    public TagForm(int id, String label, String color, String name) {
-        this.id = id;
-        this.label = label;
-        this.color = color;
-        this.name = name;
+    public TagForm() {
     }
 
     public String getName() {

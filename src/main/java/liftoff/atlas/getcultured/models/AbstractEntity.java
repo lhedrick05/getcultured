@@ -11,14 +11,14 @@ public abstract class AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @NotBlank(message = "Name cannot be blank")
     @Size(max = 50, message = "Name cannot be longer than 50 characters")
     @Column(name = "name")
     private String name;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
