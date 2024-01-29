@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Stop</title>
+<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAvjHAMX14IiRzweP8i-y5H6WblNHkf4M&libraries=places&callback=initAutocomplete" async defer></script>-->
     <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 <body>
@@ -21,45 +22,71 @@
         <textarea id="stopDescription" name="stopDescription" th:field="*{description}" required></textarea>
         <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 
-        <!-- Stop Address -->
-        <label for="streetAddress">Street Address:</label>
-        <textarea id="streetAddress" name="streetAddress" th:field="*{streetAddress}" required></textarea>
-        <div class="error" th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}"></div>
+<!--        &lt;!&ndash; Stop Address &ndash;&gt;-->
+<!--        <label for="streetAddress">Street Address:</label>-->
+<!--        <textarea id="streetAddress" name="streetAddress" th:field="*{streetAddress}" required></textarea>-->
+<!--        <div class="error" th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}"></div>-->
 
-        <!-- Stop City -->
-        <label for="cityName">City:</label>
-        <textarea id="cityName" name="cityName" th:field="*{cityName}" required></textarea>
-        <div class="error" th:if="${#fields.hasErrors('cityName')}" th:errors="*{cityName}"></div>
+<!--        &lt;!&ndash; Stop City &ndash;&gt;-->
+<!--        <label for="cityName">City:</label>-->
+<!--        <textarea id="cityName" name="cityName" th:field="*{cityName}" required></textarea>-->
+<!--        <div class="error" th:if="${#fields.hasErrors('cityName')}" th:errors="*{cityName}"></div>-->
 
-        <!-- State Dropdown -->
-        <label for="stateName">State:</label>
-        <select id="stateName" name="stateName" required>
-            <option value="">Select State</option>
-            <!-- Options will be populated by JavaScript -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    fetch('/states/states.json')
-                        .then(response => response.json())
-                        .then(states => {
-                            const selectElement = document.getElementById('stateName');
-                            states.forEach(state => {
-                                const option = document.createElement('option');
-                                option.value = state.abbreviation;
-                                option.textContent = state.name;
-                                selectElement.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error loading state data:', error));
+<!--        &lt;!&ndash; State Dropdown &ndash;&gt;-->
+<!--        <label for="stateName">State:</label>-->
+<!--        <select id="stateName" name="stateName" required>-->
+<!--            <option value="">Select State</option>-->
+<!--            &lt;!&ndash; Options will be populated by JavaScript &ndash;&gt;-->
+<!--            <script>-->
+<!--                document.addEventListener('DOMContentLoaded', function() {-->
+<!--                    fetch('/states/states.json')-->
+<!--                        .then(response => response.json())-->
+<!--                        .then(states => {-->
+<!--                            const selectElement = document.getElementById('stateName');-->
+<!--                            states.forEach(state => {-->
+<!--                                const option = document.createElement('option');-->
+<!--                                option.value = state.abbreviation;-->
+<!--                                option.textContent = state.name;-->
+<!--                                selectElement.appendChild(option);-->
+<!--                            });-->
+<!--                        })-->
+<!--                        .catch(error => console.error('Error loading state data:', error));-->
+<!--                });-->
+<!--            </script>-->
+<!--        </select>-->
+<!--        <div class="error" th:if="${#fields.hasErrors('stateName')}" th:errors="*{stateName}"></div>-->
+
+
+<!--        &lt;!&ndash; Stop Zip Code &ndash;&gt;-->
+<!--        <label for="zipCode">Zip Code:</label>-->
+<!--        <textarea id="zipCode" name="zipCode" th:field="*{zipCode}" required></textarea>-->
+<!--        <div class="error" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></div>-->
+
+<!--        <input id="autocomplete" placeholder="Enter the address" type="text">-->
+        <script>
+            function initAutocomplete() {
+                var autocomplete = new google.maps.places.Autocomplete(
+                    document.getElementById('autocomplete'), {types: ['geocode']}
+                );
+
+                autocomplete.addListener('place_changed', function() {
+                    var place = autocomplete.getPlace();
+                    console.log(place);
+                    // Additional code to handle the selected place
                 });
-            </script>
-        </select>
-        <div class="error" th:if="${#fields.hasErrors('stateName')}" th:errors="*{stateName}"></div>
+            }
 
-
-        <!-- Stop Zip Code -->
-        <label for="zipCode">Zip Code:</label>
-        <textarea id="zipCode" name="zipCode" th:field="*{zipCode}" required></textarea>
-        <div class="error" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></div>
+            // Use standard addEventListener method
+            document.addEventListener('DOMContentLoaded', function() {
+                if (window.google && window.google.maps) {
+                    initAutocomplete();
+                }
+            });
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAvjHAMX14IiRzweP8i-y5H6WblNHkf4M&libraries=places&callback=initAutocomplete" async defer></script>
+        <body>
+            <input id="autocomplete" placeholder="Enter Stop address" type="text">
+        </body>
 
 
         <!-- Additional Stop Details -->
