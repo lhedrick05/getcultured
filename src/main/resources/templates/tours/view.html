@@ -15,7 +15,9 @@
         <p><strong>Estimated Length:</strong> <span th:text="${tour.estimatedLength}">Length</span></p>
 <!--        <p><strong>Estimated Travel Time:</strong> <span th:text="${tour.estimatedTravelTime}">Travel Time</span></p>-->
 <!--        <p><strong>User Rating:</strong> <span th:text="${tour.userRating}">Rating</span></p>-->
-        <p><strong>Category:</strong> <span th:text="${tour.category.name}">Category Name</span></p>
+<!--        <p><strong>Category:</strong> <span th:text="${tour.category.name}">Category Name</span></p>-->
+        <p><strong>Category:</strong> <span th:text="${tour.category != null ? tour.category.name : 'No Category'}">Category Name</span></p>
+
         <p><strong>City:</strong> <span th:text="${tour.city.name}">City </span></p>
         <p><strong>State:</strong> <span th:text="${tour.city.state}">State </span></p>
         <p><strong>Tag:</strong> <span th:text="${tour.tag.name}">Tag </span></p>
