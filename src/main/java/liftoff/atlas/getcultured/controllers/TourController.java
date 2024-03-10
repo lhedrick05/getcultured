@@ -549,6 +549,13 @@ public class TourController {
                 tourForm.setCityId(cityId);
             }
 
+            // Handle tag ID
+            if (formData.has("tagId") && formData.get("tagId").canConvertToInt()) {
+                int tagId = formData.get("tagId").asInt();
+                // Optional: Validate the tag ID (e.g., check if such a tag exists)
+                tourForm.setTagId(tagId);
+            }
+
             // ... handle other fields similarly
 
             // Save the updated tourForm back to the session

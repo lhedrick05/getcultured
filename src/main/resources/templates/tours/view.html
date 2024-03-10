@@ -19,16 +19,16 @@
         <p><strong>Category:</strong> <span th:text="${tour.category != null ? tour.category.name : 'No Category'}">Category Name</span></p>
 
 <!--        <p><strong>City:</strong> <span th:text="${tour.city.name}">City </span></p>-->
-        <p><strong>Category:</strong> <span th:text="${tour.city != null ? tour.city.name : 'No City'}">City Name</span></p>
+        <p><strong>City:</strong> <span th:text="${tour.city != null ? tour.city.name : 'No City'}">City Name</span></p>
 
 <!--        <p><strong>State:</strong> <span th:text="${tour.city.state}">State </span></p>-->
-        <p><strong>Category:</strong> <span th:text="${tour.city != null ? tour.city.state : 'No State'}">State Name</span></p>
+        <p><strong>State:</strong> <span th:text="${tour.city != null ? tour.city.state : 'No State'}">State Name</span></p>
 
 <!--        <p><strong>Tag:</strong> <span th:text="${tour.tag.name}">Tag </span></p>-->
-        <p><strong>Category:</strong> <span th:text="${tour.tag != null ? tour.tag.name : 'No Tag'}">Tag Name</span></p>
+        <p><strong>Tag:</strong> <span th:text="${tour.tag != null ? tour.tag.name : 'No Tag'}">Tag Name</span></p>
 <!--        <p><strong>Tag Color:</strong> <span th:text="${tour.tag.color}">Tag Color </span></p>-->
         <td>
-            <p>Tag Color:</p>
+            <p><strong>Tag Color:</strong></p>
             <!-- Centered color block with dynamic color -->
             <div th:style="'background-color: ' + ${tour.tag.color} + '; width: 100px; height: 40px; border: 1px solid black; margin-top: 20px;'"></div>
         </td>

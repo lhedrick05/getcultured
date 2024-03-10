@@ -285,6 +285,9 @@ function updateStopIndices() {
 <!--    // Event listener for city dropdown-->
     document.getElementById('city').addEventListener('change', throttle(saveFormData, 2000));
 
+    <!--    // Event listener for tag dropdown-->
+    document.getElementById('tag').addEventListener('change', throttle(saveFormData, 2000));
+
     // ... add other fields as needed
 
         function setSelectedOption(selectElementId, value) {
