@@ -234,7 +234,8 @@ function updateStopIndices() {
             summaryDescription: document.getElementById('summaryDescription').value,
             estimatedLength: parseFloat(document.getElementById('estimatedLength').value) || 0,
             categoryId: document.getElementById('category').value,
-            cityId: document.getElementById('city').value
+            cityId: document.getElementById('city').value,
+            tagId: document.getElementById('tag').value
             // ... add other fields as needed
         };
 
@@ -250,6 +251,7 @@ function updateStopIndices() {
             // Handle response (e.g., show a success message)
             setSelectedOption('category', formData.categoryId);
             setSelectedOption('city', formData.cityId);
+            setSelectedOption('tag', formData.tagId);
         })
         .catch(error => console.error('Error:', error));
     }
