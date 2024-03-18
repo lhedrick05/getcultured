@@ -31,8 +31,6 @@ public class UserReview extends AbstractEntity {
         this.rating = rating;
     }
 
-    // Add getters and setters for other fields
-
     public User getUser() {
         return user;
     }
