@@ -1,13 +1,14 @@
 package liftoff.atlas.getcultured.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
-import liftoff.atlas.getcultured.models.Stop;
-import liftoff.atlas.getcultured.models.Tour;
-import liftoff.atlas.getcultured.services.StopService;
-import liftoff.atlas.getcultured.services.TourService;
+import liftoff.atlas.getcultured.models.*;
+import liftoff.atlas.getcultured.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,22 +47,37 @@ public class TourController {
     @Autowired
     private final StopService stopService;
 
+    @Autowired
+    private final TourCategoryService tourCategoryService;
+
+    @Autowired
+    private final CityService cityService;
+
+    @Autowired
+    private final TagService tagService;
+
     @ModelAttribute("tourForm")
     public TourForm getTourForm() {
         return new TourForm(); // This ensures a new form is created if not present in the session
     }
 
     @Autowired
-    public TourController(TourService tourService, StopService stopService) {
+    public TourController(TourService tourService, StopService stopService, TourCategoryService tourCategoryService, CityService cityService, TagService tagService) {
         this.tourService = tourService;
         this.stopService = stopService;
+        this.tourCategoryService = tourCategoryService;
+        this.cityService = cityService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/index")
-    public String index (Model model){
-        List<Tour> tour = (List<Tour>) tourService.getAllTours();
-        model.addAttribute("tours", tour); // Make sure this is the correct value
-        model.addAttribute("title", "All Tours");
+    public String index (Model model, SessionStatus sessionStatus){
+        if (model.containsAttribute("tourForm")) {
+            sessionStatus.setComplete();
+            List<Tour> tour = (List<Tour>) tourService.getAllTours();
+            model.addAttribute("tours", tour); // Make sure this is the correct value
+            model.addAttribute("title", "All Tours");
+        }
         return "tours/index";
     }
 
@@ -72,6 +89,9 @@ public class TourController {
             model.addAttribute("tourForm", new TourForm());
         }
 
+        model.addAttribute("categories", tourCategoryService.getAllTourCategories());
+        model.addAttribute("cities", cityService.getAllCities());
+        model.addAttribute("tags", tagService.getAllTags());
         // Fetch all stops
         List<Stop> stops = stopService.findAll();
         model.addAttribute("stops", stops);
@@ -107,6 +127,42 @@ public class TourController {
                 tour = tourService.createTourFromForm(tourForm, null);
             }
 
+            // Handle category
+            if (tourForm.getCategoryId() != null) {
+                Optional<TourCategory> categoryOptional = Optional.ofNullable(tourCategoryService.getTourCategoryById(tourForm.getCategoryId()));
+                if (categoryOptional.isPresent()) {
+                    tour.setCategory(categoryOptional.get()); // Set the category
+                } else {
+                    // Optionally handle the case where the category is not found
+                    logger.error("Category with id {} not found", tourForm.getCategoryId());
+                    // Throw an exception or handle this case accordingly
+                }
+            }
+
+            // Handle city
+            if (tourForm.getCityId() != null) {
+                Optional<City> cityOptional = Optional.ofNullable(cityService.getCityById(tourForm.getCityId()));
+                if (cityOptional.isPresent()) {
+                    tour.setCity(cityOptional.get()); // Set the city
+                } else {
+                    // Optionally handle the case where the category is not found
+                    logger.error("City with id {} not found", tourForm.getCityId());
+                    // Throw an exception or handle this case accordingly
+                }
+            }
+
+            // Handle tag
+            if (tourForm.getTagId() != null) {
+                Optional<Tag> tagOptional = Optional.ofNullable(tagService.getTagById(tourForm.getCityId()));
+                if (tagOptional.isPresent()) {
+                    tour.setTag(tagOptional.get()); // Set the city
+                } else {
+                    // Optionally handle the case where the tag is not found
+                    logger.error("Tag with id {} not found", tourForm.getTagId());
+                    // Throw an exception or handle this case accordingly
+                }
+            }
+
             redirectAttributes.addFlashAttribute("successMessage", "Tour created successfully!");
             sessionStatus.setComplete(); // Mark the session as complete
             return "redirect:/tours/view/" + tour.getId(); // Redirect to view the created tour
@@ -128,7 +184,8 @@ public class TourController {
 
     // Mapping for listing all tours
     @GetMapping
-    public String listTours(Model model) {
+    public String listTours(Model model, SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
         List<Tour> tours = tourService.getAllTours();
         model.addAttribute("tours", tours);
         return "tours/tours";
@@ -139,6 +196,12 @@ public class TourController {
     public String viewTour(@PathVariable int tourId, Model model) {
         Tour tour = tourService.getTourById(tourId);
         if (tour != null) {
+            TourCategory category = tourCategoryService.getTourCategoryById(tour.getId());
+            tour.setCategory(category);
+            City city = cityService.getCityById(tour.getId());
+            tour.setCity(city);
+            Tag tag = tagService.getTagById(tour.getId());
+            tour.setTag(tag);
             model.addAttribute("tour", tour);
             return "tours/view"; // This should be the name of your Thymeleaf template for viewing a tour
         } else {
@@ -283,7 +346,7 @@ public class TourController {
     @PostMapping("/update/{tourId}")
     public String updateTour(@PathVariable("tourId") Integer tourId,
                              @ModelAttribute("tourForm") TourForm tourForm,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes, SessionStatus sessionStatus) {
         try {
             Tour tour = tourService.getTourById(tourId);
             if (tour != null) {
@@ -291,6 +354,7 @@ public class TourController {
                 tour.setSummaryDescription(tourForm.getSummaryDescription());
                 tour.setEstimatedLength(tourForm.getEstimatedLength());
                 tourService.saveTour(tour, null); // Adjust saveTour method as necessary
+                sessionStatus.setComplete();
                 redirectAttributes.addFlashAttribute("successMessage", "Tour updated successfully!");
             } else {
                 redirectAttributes.addFlashAttribute("errorMessage", "Tour not found");
@@ -365,22 +429,22 @@ public class TourController {
 
 
 
-    @PostMapping("/update/{tourId}/finalize")
-    public String finalizeTourUpdate(@PathVariable("tourId") Integer tourId,
-                                     HttpSession session,
-                                     RedirectAttributes redirectAttributes) {
-        TourForm tourForm = (TourForm) session.getAttribute("tourForm");
-        if (tourForm != null) {
-            try {
-                Tour updatedTour = tourService.updateTourFromForm(tourId, tourForm, null);
-                session.removeAttribute("tourForm"); // Remove from session
-                redirectAttributes.addFlashAttribute("successMessage", "Tour updated successfully!");
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Error updating the tour: " + e.getMessage());
-            }
-        }
-        return "redirect:/tours/view/" + tourId;
-    }
+//    @PostMapping("/update/{tourId}/finalize")
+//    public String finalizeTourUpdate(@PathVariable("tourId") Integer tourId,
+//                                     HttpSession session,
+//                                     RedirectAttributes redirectAttributes) {
+//        TourForm tourForm = (TourForm) session.getAttribute("tourForm");
+//        if (tourForm != null) {
+//            try {
+//                Tour updatedTour = tourService.updateTourFromForm(tourId, tourForm, null);
+//                session.removeAttribute("tourForm"); // Remove from session
+//                redirectAttributes.addFlashAttribute("successMessage", "Tour updated successfully!");
+//            } catch (Exception e) {
+//                redirectAttributes.addFlashAttribute("errorMessage", "Error updating the tour: " + e.getMessage());
+//            }
+//        }
+//        return "redirect:/tours/view/" + tourId;
+//    }
 
     // Method to add a stop to the tour in the session
     @PostMapping("/update/{tourId}/session/addStop")
@@ -438,7 +502,75 @@ public class TourController {
         }
     }
 
-}
+    @PostMapping("/updateForm")
+    public ResponseEntity<?> updateTourForm(@RequestBody String formDataJson,
+                                            BindingResult result,
+                                            HttpSession session) {
+        if (result.hasErrors()) {
+            // If there are validation errors, return a bad request response.
+            return ResponseEntity.badRequest().body("Invalid form data");
+        }
 
+        try {
+            // Parse the JSON data received from the request
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode formData = objectMapper.readTree(formDataJson);
+
+            // Retrieve the tourForm from the session
+            TourForm tourForm = (TourForm) session.getAttribute("tourForm");
+            if (tourForm == null) {
+                // If tourForm doesn't exist in the session, create a new one
+                tourForm = new TourForm();
+                session.setAttribute("tourForm", tourForm);
+            }
+
+            // Update the tourForm object with the new data
+            if (formData.has("tourName")) {
+                tourForm.setName(formData.get("tourName").asText());
+            }
+            if (formData.has("summaryDescription")) {
+                tourForm.setSummaryDescription(formData.get("summaryDescription").asText());
+            }
+            if (formData.has("estimatedLength") && formData.get("estimatedLength").isNumber()) {
+                // Parse the estimatedLength as double
+                tourForm.setEstimatedLength(formData.get("estimatedLength").asDouble());
+            }
+            // Handle category ID
+            if (formData.has("categoryId") && formData.get("categoryId").canConvertToInt()) {
+                int categoryId = formData.get("categoryId").asInt();
+                // Optional: Validate the category ID (e.g., check if such a category exists)
+                tourForm.setCategoryId(categoryId);
+            }
+
+            // Handle city ID
+            if (formData.has("cityId") && formData.get("cityId").canConvertToInt()) {
+                int cityId = formData.get("cityId").asInt();
+                // Optional: Validate the city ID (e.g., check if such a city exists)
+                tourForm.setCityId(cityId);
+            }
+
+            // Handle tag ID
+            if (formData.has("tagId") && formData.get("tagId").canConvertToInt()) {
+                int tagId = formData.get("tagId").asInt();
+                // Optional: Validate the tag ID (e.g., check if such a tag exists)
+                tourForm.setTagId(tagId);
+            }
+
+            // ... handle other fields similarly
+
+            // Save the updated tourForm back to the session
+            session.setAttribute("tourForm", tourForm);
+
+            // Return a success response
+            return ResponseEntity.ok().body("Form data saved successfully");
+        } catch (JsonProcessingException e) {
+            // Handle JSON parsing errors
+            return ResponseEntity.badRequest().body("Invalid form data format");
+        }
+    }
+
+
+
+}
 
 

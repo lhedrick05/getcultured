@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<header th:replace="~{fragments :: page-header}"></header>
+<div id="admin-bar">
+    <div class="nav">
+        <a class="navlink" href="/tourCategories/add">Add Category</a>
+        <a class="navlink" href="/tourCategories/delete">Delete Category</a>
+    </div>
+</div>
+<main>
+    <tbody>
+    <tr th:each="tourCategory : ${tourCategories}">
+        <td th:text="${tourCategory.name}">Category Name</td>
+        <!-- ... other category details ... -->
+        <td>
+            <!-- Link to view the category -->
+            <a th:href="@{'/tourCategories/' + ${tourCategory.id}}" class="button">View</a>
+        </td>
+    </tr>
+    </tbody>
+    <!-- ... -->
+    <!-- Link back to the homepage -->
+    <div class="container">
+        <a href="/" class="button">Back to Homepage</a>
+    </div>
+</main>
+</body>
+</html>

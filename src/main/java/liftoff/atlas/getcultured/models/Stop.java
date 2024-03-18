@@ -1,6 +1,7 @@
 package liftoff.atlas.getcultured.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Stop extends AbstractEntity {
     @Size(max = 300, message = "Description can be no longer than 300 characters")
     private String stopDescription;
 
+    @Pattern(regexp = "^[0-9a-zA-Z #,-]+$", message = "Invalid street address")
     private String streetAddress;
 
     private String cityName;

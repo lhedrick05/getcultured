@@ -24,6 +24,12 @@ public class TourForm {
     private List<StopForm> newStops; // List to hold new stops to be added
     private List<Integer> stopsToRemove; // List of stop IDs to be removed
 
+    private Integer categoryId;
+
+    private Integer cityId;
+
+    private Integer tagId;
+
     public TourForm() {
         this.tour = new Tour();
         this.stops = new ArrayList<>();
@@ -33,6 +39,30 @@ public class TourForm {
 
     // Getters and setters
 
+
+    public Integer getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(Integer tagId) {
+        this.tagId = tagId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public int getId() {
         return id;

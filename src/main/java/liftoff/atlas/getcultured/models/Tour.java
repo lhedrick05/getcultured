@@ -5,10 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import liftoff.atlas.getcultured.dto.StopForm;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 public class Tour extends AbstractEntity {
@@ -56,8 +53,13 @@ public class Tour extends AbstractEntity {
     @JoinColumn(name = "city_id")
     private City city;
 
-//    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Stop> stops = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "category") // The column name in the database.
+    private TourCategory category;
+
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
 
     @ManyToMany
     @JoinTable(
@@ -70,7 +72,8 @@ public class Tour extends AbstractEntity {
     public Tour() {
     }
 
-    public Tour(String summaryDescription, Double estimatedLength, Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId) {
+    public Tour(String summaryDescription, Double estimatedLength,
+                Double estimatedTravelTime, Double userRating, User author, MapMarker location, City city, String imagePath, int updateId, TourCategory tourCategory, Tag tag) {
         super();
         this.summaryDescription = summaryDescription;
         this.estimatedLength = estimatedLength;
@@ -81,6 +84,7 @@ public class Tour extends AbstractEntity {
         this.city = city;
         this.imagePath = imagePath;
         this.updateId = updateId;
+        this.tag = tag;
     }
 
     public void setUpdateId(int updateId) {
@@ -186,5 +190,21 @@ public class Tour extends AbstractEntity {
 
     public void setStops(List<Stop> stops) {
         this.stops = stops;
+    }
+
+    public TourCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(TourCategory category) {
+        this.category = category;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 }

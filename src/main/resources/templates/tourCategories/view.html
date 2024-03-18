@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Tour Category</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${tourCategory.name}">Category Name</h2>
+    <!-- More details can be added here -->
+    <p><strong>Description:</strong> <span th:text="${tourCategory.description}">Description</span></p>
+
+    <!-- Button to update the category -->
+<!--    <a th:href="@{'/tourCategories/update/' + ${tourCategory.id}}" class="button">Update Category</a>-->
+
+    <!-- Link back to the list of categories -->
+    <a href="/tourCategories" class="button">Back to Categories List</a>
+</div>
+</body>
+</html>

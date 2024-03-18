@@ -15,8 +15,26 @@
         <p><strong>Estimated Length:</strong> <span th:text="${tour.estimatedLength}">Length</span></p>
 <!--        <p><strong>Estimated Travel Time:</strong> <span th:text="${tour.estimatedTravelTime}">Travel Time</span></p>-->
 <!--        <p><strong>User Rating:</strong> <span th:text="${tour.userRating}">Rating</span></p>-->
+<!--        <p><strong>Category:</strong> <span th:text="${tour.category.name}">Category Name</span></p>-->
+        <p><strong>Category:</strong> <span th:text="${tour.category != null ? tour.category.name : 'No Category'}">Category Name</span></p>
 
-        <img th:src="${tour.imagePath != null ? '/' + tour.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Tour Image" class="tour-image"/>
+<!--        <p><strong>City:</strong> <span th:text="${tour.city.name}">City </span></p>-->
+        <p><strong>City:</strong> <span th:text="${tour.city != null ? tour.city.name : 'No City'}">City Name</span></p>
+
+<!--        <p><strong>State:</strong> <span th:text="${tour.city.state}">State </span></p>-->
+        <p><strong>State:</strong> <span th:text="${tour.city != null ? tour.city.state : 'No State'}">State Name</span></p>
+
+<!--        <p><strong>Tag:</strong> <span th:text="${tour.tag.name}">Tag </span></p>-->
+        <p><strong>Tag:</strong> <span th:text="${tour.tag != null ? tour.tag.name : 'No Tag'}">Tag Name</span></p>
+<!--        <p><strong>Tag Color:</strong> <span th:text="${tour.tag.color}">Tag Color </span></p>-->
+        <td>
+            <p><strong>Tag Color:</strong></p>
+            <!-- Centered color block with dynamic color -->
+            <div th:style="'background-color: ' + ${tour.tag.color} + '; width: 100px; height: 40px; border: 1px solid black; margin-top: 20px;'"></div>
+        </td>
+
+
+        <img th:src="${tour.imagePath != null ? '/' + tour.imagePath : '/defaultLogo/DefaultLogo.jpg'}" alt="Tour Image" style="margin-top: 20px;" class="tour-image"/>
 
         <!-- Add more tour properties as needed -->
 

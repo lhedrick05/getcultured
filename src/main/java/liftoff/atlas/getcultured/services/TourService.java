@@ -6,6 +6,7 @@ import liftoff.atlas.getcultured.dto.StopForm;
 import liftoff.atlas.getcultured.dto.TourForm;
 import liftoff.atlas.getcultured.models.Stop;
 import liftoff.atlas.getcultured.models.Tour;
+import liftoff.atlas.getcultured.models.TourCategory;
 import liftoff.atlas.getcultured.models.data.StopRepository;
 import liftoff.atlas.getcultured.models.data.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,15 @@ public class TourService {
 
     @Transactional
     public void deleteTour(int tourId) {
-        tourRepository.deleteById(tourId);
+        Optional<Tour> tourOptional = tourRepository.findById(tourId);
+        if (tourOptional.isPresent()) {
+            tourRepository.deleteById(tourId);
+        } else {
+            // Handle the case where the Tour is not found, e.g., log a message
+            logger.info("Tour with id {} not found, nothing to delete.", tourId);
+        }
     }
+
 
     public String storeImage(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
@@ -245,4 +253,3 @@ public class TourService {
     }
 
 }
-

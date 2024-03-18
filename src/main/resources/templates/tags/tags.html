@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>City List</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h2>Tag List</h2>
+
+    <!-- Display the list of tags -->
+    <table>
+        <thead>
+        <tr>
+            <th>Tag ID</th>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over the list of tags -->
+        <tr th:each="tag : ${tags}">
+            <td th:text="${tag.id}"></td>
+            <td th:text="${tag.name}"></td>
+            <td>
+                <!-- Centered color block with dynamic color -->
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div th:style="'background-color: ' + ${tag.color} + '; width: 100px; height: 40px; border: 1px solid black;'"></div>
+                </div>
+            </td>
+
+            <td>
+                <!-- Link to view the tag -->
+                <a th:href="@{/tags/view/{tagId}(tagId=${tag.id})}" class="button" style="color: green;">View</a>
+
+                <!-- Link to update the tag -->
+                <!--                <a th:href="@{/tags/update/{tagId}(tagId=${tag.id})}" class="button">Update</a>-->
+
+                <!-- Form to delete the category -->
+                <form th:action="@{/tags/{tagId}/delete(tagId=${tag.id})}" method="post">
+                    <button type="submit" onclick="return confirmDelete()">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Button to create a new tour category -->
+    <p><a th:href="@{/tags/add}" class="button">Add a New Tag</a></p>
+
+    <!-- Back to Homepage link -->
+    <p><a href="/tours/index" class="button">Back to Homepage</a></p>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this category?');
+    }
+</script>
+
+</body>
+</html>
