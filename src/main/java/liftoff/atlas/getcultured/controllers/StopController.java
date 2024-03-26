@@ -67,6 +67,9 @@ public class StopController {
                 stop = stopService.createStopFromForm(stopForm, null);
             }
 
+            stop.setStreetAddress(stopForm.getFullAddress());
+            stopService.saveStop(stop, null);
+
             String redirectUrl = "redirect:/";
             if ("tourCreation".equals(referrer)) {
                 redirectAttributes.addFlashAttribute("selectedStopId", stop.getId());

@@ -255,7 +255,7 @@ public class TourController {
         stopForm.setId(stop.getId());
         stopForm.setStopName(stop.getName());
         stopForm.setDescription(stop.getStopDescription());
-        stopForm.setStreetAddress(stop.getStreetAddress());
+        stopForm.setFullAddress(stop.getStreetAddress());
         stopForm.setCityName(stop.getCityName());
         stopForm.setStateName(stop.getStateName());
         stopForm.setZipCode(stop.getZipCode());

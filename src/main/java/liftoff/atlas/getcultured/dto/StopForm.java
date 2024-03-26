@@ -5,7 +5,7 @@ public class StopForm {
     private int id;
     private String stopName;
     private String description;
-    private String streetAddress;
+    private String fullAddress;
     private String cityName;
     private String stateName;
     private int zipCode;
@@ -23,11 +23,11 @@ public class StopForm {
     public StopForm() {
     }
 
-    public StopForm(int id, String stopName, String description, String streetAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, double cost, String hoursOfOperation, double rating, String category, boolean popular, String imagePath) {
+    public StopForm(int id, String stopName, String description, String fullAddress, String cityName, String stateName, int zipCode, Double latitude, Double longitude, double cost, String hoursOfOperation, double rating, String category, boolean popular, String imagePath) {
         this.id = id;
         this.stopName = stopName;
         this.description = description;
-        this.streetAddress = streetAddress;
+        this.fullAddress = fullAddress;
         this.cityName = cityName;
         this.stateName = stateName;
         this.zipCode = zipCode;
@@ -76,12 +76,12 @@ public class StopForm {
         this.description = description;
     }
 
-    public String getStreetAddress() {
-        return streetAddress;
+    public String getFullAddress() {
+        return fullAddress;
     }
 
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
+    public void setFullAddress(String streetAddress) {
+        this.fullAddress = streetAddress;
     }
 
     public String getCityName() {

@@ -103,7 +103,7 @@ public class StopService {
         // Set properties from stopForm to stop
         stop.setName(stopForm.getStopName());
         stop.setStopDescription(stopForm.getDescription());
-        stop.setStreetAddress(stopForm.getStreetAddress());
+        stop.setStreetAddress(stopForm.getFullAddress());
         stop.setCityName(stopForm.getCityName());
         stop.setStateName(stopForm.getStateName());
         stop.setZipCode(stopForm.getZipCode());

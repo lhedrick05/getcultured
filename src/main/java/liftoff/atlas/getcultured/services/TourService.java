@@ -244,7 +244,7 @@ public class TourService {
     private Stop updateStopFromStopForm(Stop stop, StopForm stopForm) {
         stop.setName(stopForm.getStopName());
         stop.setStopDescription(stopForm.getDescription());
-        stop.setStreetAddress(stopForm.getStreetAddress());
+        stop.setStreetAddress(stopForm.getFullAddress());
         stop.setCityName(stopForm.getCityName());
         stop.setStateName(stopForm.getStateName());
         stop.setZipCode(stopForm.getZipCode());

@@ -30,6 +30,7 @@
 
                 autocomplete.addListener('place_changed', function() {
                     let place = autocomplete.getPlace();
+                    document.getElementById('fullAddress').value = place.formatted_address; // Use formatted_address for the complete address
                     console.log(place);
                     // Additional code to handle the selected place
                 });
@@ -59,6 +60,9 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGvrx-tLReI-J-L7s7Tf6HZ8Xt-f78hrs&libraries=places&callback=initAutocomplete" async defer></script>
         <body>
             <input id="autocomplete" placeholder="Enter Stop address" type="text">
+            <!-- Hidden input for the full address -->
+            <input type="hidden" id="fullAddress" name="fullAddress" th:field="*{fullAddress}">
+
         </body>
 <!--        <input type="hidden" id="streetAddress" name="streetAddress" th:field="*{streetAddress}">-->
 <!--        <input type="hidden" id="city" name="city" th:field="*{city}">-->
